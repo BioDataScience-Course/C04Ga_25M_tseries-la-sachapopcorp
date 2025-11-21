@@ -40,6 +40,25 @@ feur <- read("data/mobility_wallonia.rds")
 ```
 
 <!--% Ajoutez le nombre de chunks que vous souhaitez. Répartissez-vous le travail correctement. Structurez la section en partie avec des titres explicites de niveau trois.-->
+```{r}
+
+feur%>.%
+  smutate(., 
+    "retail" = retail_and_recreation_percent_change_from_baseline,
+    "grocery" = grocery_and_pharmacy_percent_change_from_baseline,
+    "parks" = parks_percent_change_from_baseline,
+    "transit" = transit_stations_percent_change_from_baseline,
+    "workplaces" = workplaces_percent_change_from_baseline,
+    "residential" = residential_percent_change_from_baseline) -> feurfeur
+
+```
+
+```{r}
+
+ts <- ts(feur$)
+plot(ts)
+
+```
 
 ## Conclusion
 
