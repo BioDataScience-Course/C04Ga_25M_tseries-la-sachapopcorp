@@ -1,6 +1,6 @@
 ---
 title: "___"
-author: "___"
+author: "Achille Dekkers, Maxime Pourtois, Oguzhan Dogru, Tanguy Deprez "
 format:
   html:
     code-fold: true

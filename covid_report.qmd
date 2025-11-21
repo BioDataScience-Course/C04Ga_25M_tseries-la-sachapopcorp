@@ -1,6 +1,6 @@
 ---
 title: "___"
-author: "___, ___, ___, ___"
+author: "Achille Dekkers, Maxime Pourtois, Oguzhan Dogru, Tanguy Deprez"
 format:
   pdf:
     documentclass: report
