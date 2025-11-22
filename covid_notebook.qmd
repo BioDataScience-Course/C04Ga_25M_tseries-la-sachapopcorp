@@ -51,21 +51,31 @@ feur %>.%
     "transit" = transit_stations_percent_change_from_baseline,
     "workplaces" = workplaces_percent_change_from_baseline,
     "residential" = residential_percent_change_from_baseline,
-     retail = labelise(retail_and_recreation_percent_change_from_baseline, "Variation du pourcentage de la vente au détail et des loisirs par rapport à la base"),
-    grocery = labelise(grocery, "Variation du pourcentage dans les épiceries et pharmacies par rapport au niveau de base"), 
-    parks = labelise(parks, "Variation du pourcentage dans les épiceries et pharmacies par rapport au niveau de base"), 
-      transit = labelise(transit, "Variation en pourcentage des stations de transit par rapport à la référence"), 
-      workplaces = labelise(workplaces, "Variation en pourcentage des lieux de travail par rapport à la base"),
-      residential = labelise(residential, "Variation en pourcentage résidentiel par rapport à la base")
+     retail = labelise(retail_and_recreation_percent_change_from_baseline, "Variation du pourcentage de la fréquentation des zones de vente au détail et des loisirs par rapport à la base"),
+    grocery = labelise(grocery, "Variation du pourcentage de la fréquentation des épiceries et pharmacies par rapport au niveau de base"), 
+    parks = labelise(parks, "Variation du pourcentage de la fréquentation des parcs"), 
+      transit = labelise(transit, "Variation en pourcentage de la fréquentation des stations de transit par rapport à la référence"), 
+      workplaces = labelise(workplaces, "Variation en pourcentage de la fréquentation des lieux de travail par rapport à la base"),
+      residential = labelise(residential, "Variation en pourcentage de la fréquentation des zones résidentielles par rapport à la base")
   ) -> feur
 sselect(feur, c(1, 8, 9, 10, 11, 12, 13)) -> feur
 
 ```
 
 ```{r}
-
-ts <- ts(feur$)
-plot(ts)
+par(mfrow = c(3,2), mar = c(2,2,2,2))
+tsretail <- ts(feur$retail, start = c(2020, 3, 16), frequency = 365)
+tsgrocery <- ts(feur$grocery,  start = c(2020, 3, 16), frequency = 365)
+tsparks <- ts(feur$parks,  start = c(2020, 3, 16), frequency = 365)
+tstransit <- ts(feur$transit,  start = c(2020, 3, 16), frequency = 365)
+tsworkplaces <- ts(feur$workplaces,  start = c(2020, 3, 16), frequency = 365)
+tsresidential <- ts(feur$residential,  start = c(2020, 3, 16), frequency = 365)
+plot(tsretail, main = "Fréquentation des lieux de vente au détail et loisirs")
+plot(tsgrocery, main = "Fréquentation des épiceries et pharmacies")
+plot(tsparks, main = "Fréquentation des parcs")
+plot(tstransit, main = "Fréquentation des stations de transit")
+plot(tsworkplaces, main = "Fréquentation des lieux de travail")
+plot(tsresidential,main = "Fréquentation des zones résidentielles")
 
 ```
 
