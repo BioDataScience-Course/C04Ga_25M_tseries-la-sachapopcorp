@@ -35,7 +35,7 @@ lang: fr
 if (!"tools:tests" %in% search())
   source(here::here("tests/tools_tests.R"), attach(NULL, name = "tools:tests"))
 # Configuration de l'environnement
-SciViews::R("ts")
+SciViews::R("ts", lang = "fr")
 feur <- read("data/mobility_wallonia.rds")
 ```
 
@@ -63,20 +63,61 @@ sselect(feur, c(1, 8, 9, 10, 11, 12, 13)) -> feur
 ```
 
 ```{r}
-par(mfrow = c(3,2), mar = c(2,2,2,2))
-tsretail <- ts(feur$retail, start = c(2020, 3, 16), frequency = 365)
-tsgrocery <- ts(feur$grocery,  start = c(2020, 3, 16), frequency = 365)
-tsparks <- ts(feur$parks,  start = c(2020, 3, 16), frequency = 365)
-tstransit <- ts(feur$transit,  start = c(2020, 3, 16), frequency = 365)
-tsworkplaces <- ts(feur$workplaces,  start = c(2020, 3, 16), frequency = 365)
-tsresidential <- ts(feur$residential,  start = c(2020, 3, 16), frequency = 365)
-plot(tsretail, main = "Fréquentation des lieux de vente au détail et loisirs")
-plot(tsgrocery, main = "Fréquentation des épiceries et pharmacies")
-plot(tsparks, main = "Fréquentation des parcs")
-plot(tstransit, main = "Fréquentation des stations de transit")
-plot(tsworkplaces, main = "Fréquentation des lieux de travail")
-plot(tsresidential,main = "Fréquentation des zones résidentielles")
+#VOIR POUR LES DATES JE SUIS PAS SUR QUE L'ON PUISSE LES METTRE AINSI 
 
+par(mfrow = c(3,2), mar = c(2,2,2,2))
+retail_ts <- ts(feur$retail, start = c(2020, 2, 15), frequency = 365)
+grocery_ts <- ts(feur$grocery,  start = c(2020, 2, 15), frequency = 365)
+parks_ts <- ts(feur$parks,  start = c(2020, 2, 15), frequency = 365)
+transit_ts <- ts(feur$transit,  start = c(2020, 2, 15), frequency = 365)
+workplaces_ts <- ts(feur$workplaces,  start = c(2020, 2, 15), frequency = 365)
+residential_ts <- ts(feur$residential,  start = c(2020, 2, 15), frequency = 365)
+plot(retail_ts, main = "Fréquentation des lieux de vente au détail et loisirs")
+plot(grocery_ts, main = "Fréquentation des épiceries et pharmacies")
+plot(parks_ts, main = "Fréquentation des parcs")
+plot(transit_ts, main = "Fréquentation des stations de transit")
+plot(workplaces_ts, main = "Fréquentation des lieux de travail")
+plot(residential_ts,main = "Fréquentation des zones résidentielles")
+
+```
+
+```{r}
+set.seed(9037)
+#par(mfrow = c(3,2), mar = c(2,2,2,2))
+acf(retail_ts)
+spectrum(retail_ts, spans = c(3, 5), main = "Fréquentation des lieux de vente au détail et loisirs")
+retail_ts_trend<-trend.test(retail_ts, R = 999)
+plot(retail_ts_trend)
+
+acf(grocery_ts)
+spectrum(grocery_ts, spans = c(3, 5), main = "Fréquentation des épiceries et pharmacies")
+grocery_ts_trend<-trend.test(grocery_ts, R = 999)
+plot(grocery_ts_trend)
+
+#acf(parks_ts)
+#spectrum(parks_ts, spans = c(3, 5), main = "Fréquentation des parcs")
+
+acf(transit_ts)
+spectrum(transit_ts, spans = c(3,5), main = "Fréquentation des stations de transit")
+transit_ts_trend<-trend.test(transit_ts, R = 999)
+plot(transit_ts_trend)
+
+acf(workplaces_ts)
+spectrum(workplaces_ts, spans = c(3,5), main = "Fréquentation des lieux de travail")
+workplaces_ts_trend<-trend.test(workplaces_ts, R = 999)
+plot(workplaces_ts_trend)
+
+
+acf(residential_ts)
+spectrum(residential_ts, spans = c(3,5),main = "Fréquentation des zones résidentielles")
+residential_ts_trend<-trend.test(residential_ts, R = 999)
+plot(residential_ts_trend, main = "Fréquentation des zones résidentielles")
+# APPAREMMENT PAS DE TENDANCE POUR LA ZONE RESIDENTIELLE DONC PEUT ETRE PAS IMPORTANT 
+
+
+# ESSAYER DE VOIR  si DIFFERENCE ENTRE PRE CONFINEMENT-CONFINEMENT-POST CONFINEMENT
+# On peut regarder aussi différence semaine et weekend, peut être pour les mêmes périodes
+#
 ```
 
 ## Conclusion
