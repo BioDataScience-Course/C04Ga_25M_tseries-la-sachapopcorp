@@ -145,11 +145,17 @@ retail_filt_conf <- extract(retail_diff_conf, components = "filtered")
 spectrum(retail_filt_conf, spans = c(3, 5))
 ```
 
+Partie Achille
+
+Partie Maxime
+
+Partie Oguzhan
+
+Partie Tanguy
+
 ```{r}
 
 ```
-
-
 
 ## Conclusion
 
