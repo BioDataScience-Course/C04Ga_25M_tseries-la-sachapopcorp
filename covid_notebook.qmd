@@ -24,7 +24,9 @@ lang: fr
 
 <!--% Indiquez ici d'où viennent les données et aussi quel logiciel (et version) vous utilisez pour les analyses. Inspirez-vous des projets déjà réalisés. -->
 
-...Matériel et méthodes...
+Les données de mortalité cumulée mensuelle entre 1992 et 2021 proviennent du site de l'office des statistiques de Belgique : <https://statbel.fgov.be/fr/themes/population/mortalite-et-esperance-de-vie/tables-de-mortalite-et-esperance-de-vie>
+
+L'analyse est réalisée avec la [SciViews Box 2025](https://www.sciviews.org/software/svbox/) dans [Saturn Cloud](https://saturncloud.io) (Linux Ubuntu 22.04), utilisant le [logiciel R](https://www.r-project.org) (`r R.version.string`). Le package {pastecs} version `r packageVersion("pastecs")` est utilisé pour étudier la série temporelle.
 
 ## Analyses
 
@@ -150,6 +152,27 @@ Partie Achille
 Partie Maxime
 
 Partie Oguzhan
+
+Je vais me concentrer sur workplace
+
+```{r}
+#Je me limite personnellement de fevrier à fin 2021 comme dit dans le read.me, car moins affecté après.
+feur_OD<-  sfilter(feur, date >= as.Date("2020-02-15"),  date <= as.Date("2021-12-31"))
+
+#Série journalière pour voir la dynamique brute 
+
+workjour <- ts(feur_OD$workplaces, start = c(2020, 46), frequency = 365)
+par(mfrow = c(2,2), mar = c(3, 3, 2, 1))
+plot(workjour, main = "Fréquentation des lieux de travail (journalier)", ylab = "% par rapport à la base")
+acf(workjour)
+spectrum(workjour, span = c(3, 5))
+
+set.seed(240303)
+worktrend <- trend.test(workjour, R = 999)
+plot(worktrend)
+
+
+```
 
 Partie Tanguy
 
