@@ -1,5 +1,5 @@
 ---
-title: "___"
+title: "Travail d'analyse: Les effets du confinement durant le covid sur divers paramètres sociaux et économiques."
 author: "Achille Dekkers, Maxime Pourtois, Oguzhan Dogru, Tanguy Deprez "
 format:
   html:
