@@ -130,6 +130,14 @@ Partie Achille
 
 Partie Maxime
 
+Je vais me concentrer ici sur la fréquentation des épiceries et pharmacies :
+
+```{r}
+plot(grocery_ts)
+```
+
+Au vu de l'analyse faite plus haut, l'autocorrélation est très forte et significative
+
 Partie Oguzhan
 
 Je vais me concentrer sur workplace
