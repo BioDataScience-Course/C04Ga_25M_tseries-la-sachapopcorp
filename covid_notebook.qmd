@@ -163,7 +163,45 @@ Je vais me concentrer ici sur la fréquentation des épiceries et pharmacies :
 plot(grocery_ts)
 ```
 
-Au vu de l'analyse faite plus haut, l'autocorrélation est très forte et significative
+Au vu de l'analyse faite plus haut, l'autocorrélation est très forte et significative et la présence d'une tendance est significative également.
+
+Afin de pouvoir comparer nos valeurs nous allons choisir un intervalle de temps allant de février 2022 à février 2022. \
+
+```{r}
+grocery_tscut <- ts(grocery_ts, start = c(2020, 46), end = c(2022, 46), frequency = 365)
+plot(grocery_ts)
+```
+
+Je vais tester une désaisonnalisation par la méthode des moyennes mobiles dans un premier temps :
+
+```{r}
+grocery_decomp_average <- tsd(grocery_tscut, method = "average", order = 3)
+plot(grocery_decomp_average, col = 1:3)
+grocery_av <- tseries(grocery_decomp_average)
+```
+
+On remarque que le lissage est assez faible, il reste encore beaucoup de pics dans la composante "filtered". Testons maintenant une LOESS :
+
+```{r}
+grocery_decomp_loess <- tsd(grocery_tscut, method = "loess", s.window = 7, trend = TRUE)
+plot(grocery_decomp_loess, col = 1:3)
+```
+
+On voit ici une tendance générale à l'augmentation de la fréquentation des épiceries et pharmacie. Je vais essayer maintenant de dégager un cycle de cette série.
+
+```{r}
+grocery_loess <- tseries(grocery_decomp_loess)
+spectrum(grocery_loess[, "seasonal"], spans = c(5, 7))
+```
+
+On observe un cycle signifcatif à 50 jours ???
+
+```{r}
+grocery_decomp_loess2 <- tsd(grocery_tscut, method = "loess", s.window = 7)
+plot(grocery_decomp_loess2, col = 1:3
+  
+  )
+```
 
 Partie Oguzhan
 
