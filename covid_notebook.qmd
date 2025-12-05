@@ -125,33 +125,6 @@ plot(residential_ts_trend, main = "Fréquentation des zones résidentielles")
 #
 ```
 
-```{r }
-retail_diff<-tsd(retail_ts, method = "average", s.window = "periodic")
-retail_loess<-tsd(retail_ts, method = "loess", s.window = 7, trend = TRUE)
-plot(retail_diff)
-plot(retail_loess, col = c(1:3))
-
-retail_filt <- extract(retail_diff, components = "filtered")
-spectrum(retail_filt, spans = c(3, 5))
-
-retail_resid <- extract(retail_diff, components = "residuals")
-spectrum(retail_resid, spans = c(3, 5))
-
-retail_mts<-tseries(retail_loess)
-fspec <- spectrum(retail_mts[, "seasonal"],spans = c(3,5))
-rsspec <- spectrum(retail_mts[, "residuals"],spans = c(3,5))
-```
-
-```{r retail précovid}
-retail_ts_conf<-window(retail_ts, end = c(2020, 126))
-retail_diff_conf<-tsd(retail_ts_conf, method = "average", s.window = "periodic")
-
-acf(retail_ts_conf)
-plot(retail_diff_conf)
-
-retail_filt_conf <- extract(retail_diff_conf, components = "filtered")
-spectrum(retail_filt_conf, spans = c(3, 5))
-```
 
 Partie Achille
 
@@ -302,8 +275,65 @@ La courbe seasonal identifie des motifs qui se répètent sur la durée, dont l'
 Partie Tanguy
 
 ```{r}
+feur_date<-sfilter(feur, date >= as.Date("2020-02-15"),  date <= as.Date("2022-02-15"))
+
+retail_ts1 <- ts(feur_date$retail, start = c(2020, 46), frequency = 365)
+par(mfrow = c(2,2), mar = c(3, 3, 2, 1))
+plot(retail_ts1, main = "Fréquentation des lieux de vente au détail et loisirs ", ylab = "% par rapport à la base")
+acf(retail_ts1)
+spectrum(retail_ts1, spans = c(3, 5))
+
+set.seed(144946)
+retail_trend <- trend.test(retail_ts1, R = 999)
+plot(retail_trend)
+```
+
+```{r jour de la semaine}
+feur_datew <- feur_date
+# Calcul des jours de la semaine
+feur_datew$weekdays <- weekdays(as.POSIXct(feur_datew$date))
+# Les données du week-end sont remplacées par des valeurs manquantes
+feur_datew[feur_datew$weekdays == "Saturday" | feur_datew$weekdays == "Sunday" , 2:7] <- NA 
+# La série temporelle est créée (début le 15 février 2020 = 46e jour de l'année 2020)
+retailw_ts <- ts(feur_datew$retail, start = c(2020, 46), frequency = 365)
+plot(retailw_ts)
+# Aggrégation par moyenne des valeurs par semaine
+retailw_ts2 <- aggregate(retailw_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(retailw_ts2)
 
 ```
+
+
+```{r}
+acf(retailw_ts2)
+spectrum(retailw_ts2, spans = c(3,5))
+set.seed(451981998)
+retailw_trend <- trend.test(retailw_ts2, R = 999)
+plot(retailw_trend)
+```
+
+
+```{r weekend}
+feur_datewk <- feur_date
+feur_datewk$weekdays <- weekdays(as.POSIXct(feur_datewk$date))
+# Les données du week-end sont remplacées par des valeurs manquantes
+feur_datewk[feur_datewk$weekdays == c("Monday") |feur_datewk$weekdays == c("Tuesday") |feur_datewk$weekdays == c("Wednesday") |feur_datewk$weekdays == c("Thursday") |feur_datewk$weekdays == c("Friday") , 2:7] <- NA 
+# La série temporelle est créée (début le 15 février 2020 = 46e jour de l'année 2020)
+retailwk_ts <- ts(feur_datewk$retail, start = c(2020, 46), frequency = 365)
+plot(retailwk_ts)
+# Aggrégation par moyenne des valeurs par semaine
+retailwk_ts2 <- aggregate(retailwk_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(retailwk_ts2)
+```
+
+```{r}
+acf(retailwk_ts2)
+spectrum(retailwk_ts2, spans = c(3,5))
+set.seed(4464756)
+retailwk_trend <- trend.test(retailwk_ts2, R = 999)
+plot(retailwk_trend)
+```
+
 
 ## Conclusion
 
