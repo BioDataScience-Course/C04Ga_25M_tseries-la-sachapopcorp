@@ -174,6 +174,79 @@ plot(worktrend)
 
 ```
 
+La série journalière montre une énorme chute début 2020 qui pourrait correspondre au confinement, puis une remontée progressive qui reste sous 0 jusqu'à fin 2021, ce qui colle avec le retour au travail présentiel.
+
+L'ACF est composé de pics décroissants avec le temps. L'axe étant exprimé en années, le lag de 0.02 s'exprime en plus ou moins 7 jours (0.02 \* 365). Le motif en pics indiquent une possible saisonnalité hebdomadaire, les jours de semaine ont un profil similaire et les week-ends provoquent un même type de creux.
+
+Le périodogramme lissé voit 2 pics significatifs, on voit donc 2 phénomènes répétés tous les 50 et 100 jours.
+
+L'histogramme du trend test confirme la significativité de la tendance.
+
+Passons maintenant à l'hebdomadaire.
+
+```{r}
+feurw <- feur_OD
+feurw$weekday <- weekdays(as.POSIXct(feurw$date))
+
+#On met NA a la place des w-e pour se concentrer sur les jours ouvrables.
+
+feurw[feurw$weekday %in% c("Saturday", "Sunday", "samedi", "dimanche"), "workplaces"] <- NA
+workdw <- ts(feurw$workplaces, start = c(2020, 46), frequency = 365)
+workweek <- aggregate(workdw, 52, FUN = collapse::fmean, ts.eps = 1 / 52)
+plot(workweek)
+
+```
+
+On voit très clairement une chute supérieure à 60% de la fréquentation des lieux de travail au début puis une remontée qui ne revient jamais vraiment au point de départ.
+
+```{r}
+par(mfrow = c(2,2), mar = c(3,3,2,1))
+
+plot(workweek, main = "Fréquentation hebdomadaire des lieux de travail", ylab = "% par rapport à la base", xlab = "")
+acf(workweek, main = "ACF - série hebdomadaire")
+spectrum(workweek, spans = c(3,5), main = "Spectre - série hebdomadaire")
+set.seed(240303)
+workweek_trend <- trend.test(workweek, R = 999)
+plot(workweek_trend, main = "Test de tendance - série hebdomadaire")
+par(mfrow = c(1,1))
+```
+
+Sur l'échelle hebdomadaire, on voit la même histoire, avec une chute de plus de 60% des fréquentations des lieux de travail. L'ACF montre une forte autocorrélation positivie sur des petit lags qui décroit lentement, la série n'est pas stationnaire.
+
+Les tendances persistent à l'échelle hebdomaire.
+
+Décomposons maintenant la série hebdomadaire, elle semble plus propre que la journalière.
+
+```{r}
+#Vu la gueule des courbes, je vais faire une LOESS, en espérant que ça va gérer les petits effets de bords en même temps.
+#workweek_loess <- tsd(workweek, method = "loess", s.window = 53, trend = TRUE) j'ai essayé mais il dit que la période totale est trop courte :((( je vais donc reprendre sans la coupure que j'ai fait au tout début de mon analyse
+feur_OD2 <- sfilter(feur, date >= as.Date("2020-02-15"))
+feurdw2 <- feur_OD2
+feurdw2$weekday <- weekdays(as.POSIXct(feurdw2$date))
+feurdw2[feurdw2$weekday %in% c("Saturday","Sunday","samedi","dimanche"), "workplaces"] <- NA
+workdw2 <- ts(feurdw2$workplaces, start = c(2020, 46), frequency = 365)
+workweek2 <- aggregate(workdw2, 52, FUN = collapse::fmean, ts.eps = 1/52)
+
+#juste pour vérifier que ça ne change pas drastiquement 
+plot(workweek2, main = "Fréquentation hebdomadaire des lieux de travail", ylab = "% par rapport à la base", xlab = "")
+par(mfrow = c(2,2), mar = c(3,3,2,1))
+plot(workweek2, main = "Fréquentation hebdomadaire des lieux de travail", ylab = "% par rapport à la base", xlab = "")
+acf(workweek2, main = "ACF - série hebdomadaire")
+spectrum(workweek2, spans = c(3,5), main = "Spectre - série hebdomadaire")
+set.seed(240303)
+workweek_trend_test <- trend.test(workweek2, R = 999)
+plot(workweek_trend_test, main = "Test de tendance - série hebdomadaire")
+par(mfrow = c(1,1))
+
+workweek_loess <- tsd(workweek2, method = "loess", s.window = 53, trend = TRUE)
+plot(workweek_loess, main = "Décomposition - lieux de travail (hebdom.)")
+
+```
+
+La série brute reprend ce qu'on a dit au début, il y a une très grosse réduction dans la fréquentation des lieux de travail au confinement. La tendance montre que que la fréquentation est remontée avec le temps tout en restant en dessous du niveau de référence. L'impact du covid n'a donc pas vraiment disparu.
+
+La courbe seasonal identifie des motifs qui se répètent sur la durée, dont l'amplitude est modérée. Les creux marqués pourraient être l'hiver ou certains épisodes ou les mesures ont été de nouveau renforcés. La saisonalité reste plus petite que la tendance.
+
 Partie Tanguy
 
 ```{r}
