@@ -74,7 +74,7 @@ sselect(feur, c(1, 8, 9, 10, 11, 12, 13)) -> feur
 par(mfrow = c(3,2), mar = c(2,2,2,2))
 retail_ts <- ts(feur$retail, start = c(2020, 46), frequency = 365)
 grocery_ts <- ts(feur$grocery,  start = c(2020, 46), frequency = 365)
-parks_ts <- ts(feur$parks,  start = c(2020, 46), frequency = 365)
+parksts <- ts(feur$parks,  start = c(2020, 46), frequency = 365)
 transit_ts <- ts(feur$transit,  start = c(2020, 46), frequency = 365)
 workplaces_ts <- ts(feur$workplaces,  start = c(2020, 46), frequency = 365)
 residential_ts <- ts(feur$residential,  start = c(2020, 46), frequency = 365)
@@ -90,31 +90,39 @@ plot(residential_ts,main = "Fréquentation des zones résidentielles")
 ```{r Autocrrélation,spectre, tendantce des séries brutes}
 
 set.seed(9037)
-#par(mfrow = c(3,2), mar = c(2,2,2,2))
+par(mfrow = c(2,3), mar =c(3,3,3,3))
 acf(retail_ts)
 spectrum(retail_ts, spans = c(3, 5), main = "Fréquentation des lieux de vente au détail et loisirs")
 retail_ts_trend<-trend.test(retail_ts, R = 999)
 plot(retail_ts_trend)
 
+par(mfrow = c(2,3), mar =c(3,3,3,3))
 acf(grocery_ts)
 spectrum(grocery_ts, spans = c(3, 5), main = "Fréquentation des épiceries et pharmacies")
 grocery_ts_trend<-trend.test(grocery_ts, R = 999)
 plot(grocery_ts_trend)
 
-#acf(parks_ts)
-#spectrum(parks_ts, spans = c(3, 5), main = "Fréquentation des parcs")
+library(forecast)
+parkstsclean <- na.interp(parksts)
+par(mfrow = c(2,3), mar =c(3,3,3,3))
+acf(parkstsclean)
+spectrum(parkstsclean, spans = c(3, 5), main = "Fréquentation des parcs")
+parksts_trend<-trend.test(parkstsclean, R = 999)
+plot(parksts_trend)
 
+par(mfrow = c(2,3), mar =c(3,3,3,3))
 acf(transit_ts)
 spectrum(transit_ts, spans = c(3,5), main = "Fréquentation des stations de transit")
 transit_ts_trend<-trend.test(transit_ts, R = 999)
 plot(transit_ts_trend)
 
+par(mfrow = c(2,3), mar =c(3,3,3,3))
 acf(workplaces_ts)
 spectrum(workplaces_ts, spans = c(3,5), main = "Fréquentation des lieux de travail")
 workplaces_ts_trend<-trend.test(workplaces_ts, R = 999)
 plot(workplaces_ts_trend)
 
-
+par(mfrow = c(2,3), mar =c(3,3,3,3))
 acf(residential_ts)
 spectrum(residential_ts, spans = c(3,5),main = "Fréquentation des zones résidentielles")
 residential_ts_trend<-trend.test(residential_ts, R = 999)
@@ -125,8 +133,82 @@ plot(residential_ts_trend, main = "Fréquentation des zones résidentielles")
 #
 ```
 
+Partie Achille (parks et transit) : 
 
-Partie Achille
+### Fréquentation des parcs pendant le covid :
+
+```{r}
+dates <- seq(as.Date("2020-02-15"), by = "day", length.out = length(parksts))
+z <- zoo(parksts, dates)
+plot(z, type = "l", xlab = "Dates", ylab = "Variation de la fréquentation des parcs")
+abline(v = as.Date("2020-03-18"), col = "2", lty = 3)
+abline(v = as.Date("2020-05-04"), col = "3", lty = 3)
+abline(v = as.Date("2020-10-20"), col = "2", lty = 3)
+abline(v = as.Date("2021-02-01"), col = "3", lty = 3)
+
+```
+
+Ici, on constate, pendant le premier confinement, une première diminution drastique de la fréquentation des parcs. Pendant le second, on constate que la fréquentation des parcs est très diminuée. Cependant, il pourrait simplement s'agir d'une diminution liée aux températures hivernales. Voyons ce que les analyses suivantes révèlent.
+
+```{r}
+acf(parkstsclean)
+spectrum(parkstsclean, spans = c(3,5))
+plot(trend.test(parkstsclean, R = 199))
+
+```
+L'analyse de l'autocorrélation nous montre une très forte autocorrélation typique d'une tendance générale.
+
+L'analyse spectrale nous révèle des cycles hebdomadaires importants mais peu significatifs (365/50 ~ 7). Cependant, en regardant bien, on constate un cycle très important à 1 qui montre donc un cycle annuel significatif.
+
+L'analyse de la tendance générale nous montre également une tendance générale à l'augmentation. Voyons ca de plus près.
+
+```{r}
+parkstsd <- tsd(parkstsclean, method = "loess", s.window = 13, trend = TRUE)
+plot(parkstsd, col = 1:3)
+
+```
+Cette analyse met en évidence une tendance générale à l'augmentation depuis le premier confinement jusqu'a atteindre un plateau après le second confinement.
+
+```{r}
+parkstsd <- tsd(parkstsclean, method = "average", order = 15, time = 3)
+plot(parkstsd, col = 1:3)
+
+```
+
+Cette analyse met en évidence le cycle annuel. On constate ici que le premier cycle est moins écrasé que les deux suivants. On peut sans doute en conclure qu'une diminution de la fréquentation des parcs est survenue après le premier confinement, comme le suggérait notre première analyse. 
+
+### Fréquentation des stations de transport en commun : 
+
+```{r}
+dates <- seq(as.Date("2020-02-15"), by = "day", length.out = length(transit_ts))
+z <- zoo(transit_ts, dates)
+plot(z, type = "l", xlab = "Dates", ylab = "Variation de la fréquentation des stations de transport en commun")
+abline(v = as.Date("2020-03-18"), col = "2", lty = 3)
+abline(v = as.Date("2020-05-04"), col = "3", lty = 3)
+abline(v = as.Date("2020-10-20"), col = "2", lty = 3)
+abline(v = as.Date("2021-02-01"), col = "3", lty = 3)
+```
+Encore une fois, on constate une diminution drastique au moment du premier confinement pour recommencer à augmenter au moment du déconfinement. Cette observation est nettement moins marquée pour le deuxième confinement mais tout de même présente. Voyons ça de plus près.
+
+```{r}
+acf(transit_ts)
+spectrum(transit_ts, spans = c(3,5))
+plot(trend.test(transit_ts, R = 199))
+
+```
+Cette analyse est assez semblables aux autres variables avec une ACF typique d'une tendance générale, un cycle annuel significatif ainsi que des cycles hebdomadaires moins marqués, non-significatifs. 
+
+```{r}
+transit_tsd <- tsd(transit_ts, method = "loess", s.window = 13, trend = TRUE)
+plot(transit_tsd, col = 1:3)
+
+parkstsd <- tsd(transit_ts, method = "average", order = 15, time = 3)
+plot(parkstsd, col = 1:3)
+parkstsd_ts <- tseries(parkstsd)
+spectrum(parkstsd_ts[,"filtered"], spans = c(3,5))
+```
+
+Comme l'ont déja démontré nos analyses précédentes, on constate une tendance générale à l'augmentation. De plus, l'analyse montre un creux très marqué au moment du premier confinement.
 
 Partie Maxime
 
@@ -138,7 +220,7 @@ plot(grocery_ts)
 
 Au vu de l'analyse faite plus haut, l'autocorrélation est très forte et significative et la présence d'une tendance est significative également.
 
-Afin de pouvoir comparer nos valeurs nous allons choisir un intervalle de temps allant de février 2022 à février 2022. \
+Afin de pouvoir comparer nos valeurs nous allons choisir un intervalle de temps allant de février 2020 à février 2022.\
 
 ```{r}
 grocery_tscut <- ts(grocery_ts, start = c(2020, 46), end = c(2022, 46), frequency = 365)
@@ -167,7 +249,8 @@ grocery_loess <- tseries(grocery_decomp_loess)
 spectrum(grocery_loess[, "seasonal"], spans = c(5, 7))
 ```
 
-On observe un cycle signifcatif à 50 jours ???
+On observe un cycle signifcatif à 50 jours ??? 
+(Non pas 50 jours. il s'agit de notre unité de base, l'année (365 jours), DIVISEE par ~50 ce qui nous donne plus ou moins 7 jours.)
 
 ```{r}
 grocery_decomp_loess2 <- tsd(grocery_tscut, method = "loess", s.window = 7)
@@ -303,7 +386,6 @@ plot(retailw_ts2)
 
 ```
 
-
 ```{r}
 acf(retailw_ts2)
 spectrum(retailw_ts2, spans = c(3,5))
@@ -311,7 +393,6 @@ set.seed(451981998)
 retailw_trend <- trend.test(retailw_ts2, R = 999)
 plot(retailw_trend)
 ```
-
 
 ```{r weekend}
 feur_datewk <- feur_date
@@ -333,7 +414,6 @@ set.seed(4464756)
 retailwk_trend <- trend.test(retailwk_ts2, R = 999)
 plot(retailwk_trend)
 ```
-
 
 ## Conclusion
 
