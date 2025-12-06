@@ -125,7 +125,6 @@ plot(residential_ts_trend, main = "Fréquentation des zones résidentielles")
 #
 ```
 
-
 Partie Achille
 
 Partie Maxime
@@ -138,7 +137,7 @@ plot(grocery_ts)
 
 Au vu de l'analyse faite plus haut, l'autocorrélation est très forte et significative et la présence d'une tendance est significative également.
 
-Afin de pouvoir comparer nos valeurs nous allons choisir un intervalle de temps allant de février 2022 à février 2022. \
+Afin de pouvoir comparer nos valeurs nous allons choisir un intervalle de temps allant de février 2022 à février 2022.\
 
 ```{r}
 grocery_tscut <- ts(grocery_ts, start = c(2020, 46), end = c(2022, 46), frequency = 365)
@@ -303,7 +302,6 @@ plot(retailw_ts2)
 
 ```
 
-
 ```{r}
 acf(retailw_ts2)
 spectrum(retailw_ts2, spans = c(3,5))
@@ -311,7 +309,6 @@ set.seed(451981998)
 retailw_trend <- trend.test(retailw_ts2, R = 999)
 plot(retailw_trend)
 ```
-
 
 ```{r weekend}
 feur_datewk <- feur_date
@@ -333,7 +330,6 @@ set.seed(4464756)
 retailwk_trend <- trend.test(retailwk_ts2, R = 999)
 plot(retailwk_trend)
 ```
-
 
 ## Conclusion
 
