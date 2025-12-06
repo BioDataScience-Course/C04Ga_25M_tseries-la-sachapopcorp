@@ -138,8 +138,10 @@ Partie Achille (parks et transit) :
 ### Fréquentation des parcs pendant le covid :
 
 ```{r}
-dates <- seq(as.Date("2020-02-15"), by = "day", length.out = length(parksts))
-z <- zoo(parksts, dates)
+parks <- ts(feur$parks)
+
+dates <- seq(as.Date("2020-02-15"), by = "day", length.out = length(parks))
+z <- zoo(parks, dates)
 plot(z, type = "l", xlab = "Dates", ylab = "Variation de la fréquentation des parcs")
 abline(v = as.Date("2020-03-18"), col = "2", lty = 3)
 abline(v = as.Date("2020-05-04"), col = "3", lty = 3)
@@ -180,8 +182,10 @@ Cette analyse met en évidence le cycle annuel. On constate ici que le premier c
 ### Fréquentation des stations de transport en commun : 
 
 ```{r}
-dates <- seq(as.Date("2020-02-15"), by = "day", length.out = length(transit_ts))
-z <- zoo(transit_ts, dates)
+transit <- ts(feur$transit)
+
+dates <- seq(as.Date("2020-02-15"), by = "day", length.out = length(transit))
+z <- zoo(transit, dates)
 plot(z, type = "l", xlab = "Dates", ylab = "Variation de la fréquentation des stations de transport en commun")
 abline(v = as.Date("2020-03-18"), col = "2", lty = 3)
 abline(v = as.Date("2020-05-04"), col = "3", lty = 3)
@@ -191,24 +195,22 @@ abline(v = as.Date("2021-02-01"), col = "3", lty = 3)
 Encore une fois, on constate une diminution drastique au moment du premier confinement pour recommencer à augmenter au moment du déconfinement. Cette observation est nettement moins marquée pour le deuxième confinement mais tout de même présente. Voyons ça de plus près.
 
 ```{r}
-acf(transit_ts)
-spectrum(transit_ts, spans = c(3,5))
-plot(trend.test(transit_ts, R = 199))
+acf(transit)
+spectrum(transit, spans = c(3,5))
+plot(trend.test(transit, R = 199))
 
 ```
 Cette analyse est assez semblables aux autres variables avec une ACF typique d'une tendance générale, un cycle annuel significatif ainsi que des cycles hebdomadaires moins marqués, non-significatifs. 
 
 ```{r}
-transit_tsd <- tsd(transit_ts, method = "loess", s.window = 13, trend = TRUE)
-plot(transit_tsd, col = 1:3)
 
-parkstsd <- tsd(transit_ts, method = "average", order = 15, time = 3)
-plot(parkstsd, col = 1:3)
-parkstsd_ts <- tseries(parkstsd)
-spectrum(parkstsd_ts[,"filtered"], spans = c(3,5))
+transitsd <- tsd(transit, method = "average", order = 15, time = 3)
+plot(transitsd, col = 1:3)
+transitts<- tseries(transitsd)
+spectrum(transitts[,"filtered"], spans = c(3,5))
 ```
 
-Comme l'ont déja démontré nos analyses précédentes, on constate une tendance générale à l'augmentation. De plus, l'analyse montre un creux très marqué au moment du premier confinement.
+L'analyse montre un creux très marqué au moment du premier confinement.
 
 Partie Maxime
 
