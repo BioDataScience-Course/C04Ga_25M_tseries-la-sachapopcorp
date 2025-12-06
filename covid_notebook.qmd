@@ -287,6 +287,24 @@ set.seed(144946)
 retail_trend <- trend.test(retail_ts1, R = 999)
 plot(retail_trend)
 ```
+```{r}
+retail_tsd <- tsd(retail_ts1, method = "average", order = 3)
+plot(retail_tsd, col = 1:3)
+#retail_tsd_series<- tseries(retail_tsd)
+
+retail_resid <- extract(retail_tsd, components = "residuals")
+plot(retail_resid)
+spectrum(retail_resid, spans = c(3.5))
+
+retail_filt <- extract(retail_tsd, components = "filtered")
+plot(retail_filt)
+spectrum(retail_filt, spans = c(3.5))
+```
+
+```{r}
+retail_loess <- tsd(retail_ts1, method = "loess", s.window = 7, trend = TRUE)
+plot(grocery_decomp_loess, col = 1:4)
+```
 
 ```{r jour de la semaine}
 feur_datew <- feur_date
@@ -312,6 +330,19 @@ retailw_trend <- trend.test(retailw_ts2, R = 999)
 plot(retailw_trend)
 ```
 
+```{r}
+retaitw_tsd <- tsd(retailw_ts2, method = "average", order = 4)
+plot(retail_tsd, col = 1:3)
+
+#retailw_loess <- tsd(retailw_ts2, method = "loess", s.window = 7)
+#plot(retailw_loess, col = 1:4)
+```
+
+
+
+
+
+
 
 ```{r weekend}
 feur_datewk <- feur_date
@@ -334,6 +365,10 @@ retailwk_trend <- trend.test(retailwk_ts2, R = 999)
 plot(retailwk_trend)
 ```
 
+```{r}
+retailwk_tsd <- tsd(retailwk_ts2, method = "average", order = 4)
+plot(retailwk_tsd, col = 1:3)
+```
 
 ## Conclusion
 
