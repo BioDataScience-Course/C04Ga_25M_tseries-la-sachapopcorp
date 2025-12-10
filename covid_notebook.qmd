@@ -74,7 +74,7 @@ sselect(feur, c(1, 8, 9, 10, 11, 12, 13)) -> feur
 par(mfrow = c(3,2), mar = c(2,2,2,2))
 retail_ts <- ts(feur$retail, start = c(2020, 46), frequency = 365)
 grocery_ts <- ts(feur$grocery,  start = c(2020, 46), frequency = 365)
-parksts <- ts(feur$parks,  start = c(2020, 46), frequency = 365)
+parks_ts <- ts(feur$parks,  start = c(2020, 46), frequency = 365)
 transit_ts <- ts(feur$transit,  start = c(2020, 46), frequency = 365)
 workplaces_ts <- ts(feur$workplaces,  start = c(2020, 46), frequency = 365)
 residential_ts <- ts(feur$residential,  start = c(2020, 46), frequency = 365)
@@ -356,6 +356,7 @@ La série brute reprend ce qu'on a dit au début, il y a une très grosse réduc
 
 La courbe seasonal identifie des motifs qui se répètent sur la durée, dont l'amplitude est modérée. Les creux marqués pourraient être l'hiver ou certains épisodes ou les mesures ont été de nouveau renforcés. La saisonalité reste plus petite que la tendance.
 
+
 Partie Tanguy
 
 ```{r}
@@ -366,7 +367,9 @@ par(mfrow = c(2,2), mar = c(3, 3, 2, 1))
 plot(retail_ts1, main = "Fréquentation des lieux de vente au détail et loisirs ", ylab = "% par rapport à la base")
 acf(retail_ts1)
 spectrum(retail_ts1, spans = c(3, 5))
+```
 
+```{r}
 set.seed(144946)
 retail_trend <- trend.test(retail_ts1, R = 999)
 plot(retail_trend)
@@ -388,7 +391,7 @@ spectrum(retail_filt, spans = c(3.5))
 
 ```{r}
 retail_loess <- tsd(retail_ts1, method = "loess", s.window = 7, trend = TRUE)
-plot(grocery_decomp_loess, col = 1:4)
+plot(retail_loess, col = 1:4)
 ```
 
 ```{r jour de la semaine}
@@ -447,6 +450,7 @@ plot(retailwk_trend)
 retailwk_tsd <- tsd(retailwk_ts2, method = "average", order = 4)
 plot(retailwk_tsd, col = 1:3)
 ```
+
 
 ## Conclusion
 
