@@ -359,6 +359,8 @@ La courbe seasonal identifie des motifs qui se répètent sur la durée, dont l'
 
 Partie Tanguy
 
+Pour cette analyse, nous allons nous concentrer sur la variation du pourcentage de la fréquentation des zones de vente au détail et des loisirs par rapport à la période prise comme référence. En reprenant les dates entre le 15 février 2020 et le 15 février 2022.
+
 ```{r}
 feur_date<-sfilter(feur, date >= as.Date("2020-02-15"),  date <= as.Date("2022-02-15"))
 
@@ -368,6 +370,12 @@ plot(retail_ts1, main = "Fréquentation des lieux de vente au détail et loisirs
 acf(retail_ts1)
 spectrum(retail_ts1, spans = c(3, 5))
 ```
+Sur le premier graphique on peut voir que qu'il n'y a pas de différence avec les valeurs de références, mais la série est suivit d'une chute brutale de la fréquentation avec -80% au printemps, en raison du premier confinement.
+Une augmentation des fréquentation à la fin de confinement, et on peut observer une seconde baisse à la fin de l'année 2020 en raison de la recrudescence des cas de covid-19. Puis a nouveau un augmentation avec certaines valeurs extrême.
+
+Sur ce graphique de l'autocorrélation, on voit une décroissance assez lente. Cela signifie que la fréquentation d'un jour est fortement corrélée avec la fréquentation de nombreux jours précédents.
+
+
 
 ```{r}
 set.seed(144946)
@@ -375,19 +383,32 @@ retail_trend <- trend.test(retail_ts1, R = 999)
 plot(retail_trend)
 ```
 
+En faisant une analyse de la tendance générale en utilisant la méthode bootstrap, on remarque que notre histogramme se trouve à gauche de la valeur t bootstrappée. Cela signifie que p est inférieur à α, nous rejetons donc H0 et concluons qu’une tendance générale significative au seuil α existe dans la série.
+
+
+
 ```{r}
 retail_tsd <- tsd(retail_ts1, method = "average", order = 3)
 plot(retail_tsd, col = 1:3)
 #retail_tsd_series<- tseries(retail_tsd)
+```
+En filtrant la série avec la moyenne mobile, on remarque pour la composante filtered reprend globalement la même tendance que la série brute, c'est à dire avec un choc dû au premier confinement.
 
+Une fois que cette tendance est retirée , les résidus expose principalement de la saisonnalité à courte période (hebdomadaire) et des évènements ponctuels.
+
+```{r}
 retail_resid <- extract(retail_tsd, components = "residuals")
 plot(retail_resid)
 spectrum(retail_resid, spans = c(3.5))
+```
+En s'intéressant au périodigramme lissé pour la distribution des résidus, on remarque un pic principal à 50 suivit par deux autres à 110 et 160. Cela indique qu'il existe un cycle régulier dans la série, qui se répète avec une fréquence de 50 à 55 ou le cycle est au-dessus des limites de confiance bleues.
 
+```{r}
 retail_filt <- extract(retail_tsd, components = "filtered")
 plot(retail_filt)
 spectrum(retail_filt, spans = c(3.5))
 ```
+Sur le periodigramme de la composante filtré on ne remarque qu'un seul pic proche de 0 dans l'intervalle de confiance. Il ne semble donc pas avoir de tendance dans ce cas.
 
 ```{r}
 retail_loess <- tsd(retail_ts1, method = "loess", s.window = 7, trend = TRUE)
