@@ -20,6 +20,10 @@ lang: fr
 
 <!--% Rédigez une courte introduction de 3 ou 5 phrases qui présente vos données. Ajoutez une phrase de but. Vous devez citer la bibliographie en utilisant le formatage Markdown ad hoc et en incluant votre référence au format bibtex dans le fichier references.bib. -->
 
+La pandémie de Covid-19 a fortement perturbé les habitudes de déplacement, notamment en Wallonie. Pour documenter ces changements, ce projet utilise les données de mobilité communautaire de Google, qui constituent une série spatio-temporelle décrivant la fréquentation de divers lieux. Nous nous concentrons spécifiquement sur les années 2020 et 2021, périodes les plus marquées par les confinements et les restrictions en Belgique.
+
+Notre but ici est 
+
 ## Matériel et méthodes
 
 <!--% Indiquez ici d'où viennent les données et aussi quel logiciel (et version) vous utilisez pour les analyses. Inspirez-vous des projets déjà réalisés. -->
@@ -74,13 +78,13 @@ sselect(feur, c(1, 8, 9, 10, 11, 12, 13)) -> feur
 par(mfrow = c(3,2), mar = c(2,2,2,2))
 retail_ts <- ts(feur$retail, start = c(2020, 46), frequency = 365)
 grocery_ts <- ts(feur$grocery,  start = c(2020, 46), frequency = 365)
-parks_ts <- ts(feur$parks,  start = c(2020, 46), frequency = 365)
+parksts <- ts(feur$parks,  start = c(2020, 46), frequency = 365)
 transit_ts <- ts(feur$transit,  start = c(2020, 46), frequency = 365)
 workplaces_ts <- ts(feur$workplaces,  start = c(2020, 46), frequency = 365)
 residential_ts <- ts(feur$residential,  start = c(2020, 46), frequency = 365)
 plot(retail_ts, main = "Fréquentation des lieux de vente au détail et loisirs")
 plot(grocery_ts, main = "Fréquentation des épiceries et pharmacies")
-plot(parks_ts, main = "Fréquentation des parcs")
+plot(parksts, main = "Fréquentation des parcs")
 plot(transit_ts, main = "Fréquentation des stations de transit")
 plot(workplaces_ts, main = "Fréquentation des lieux de travail")
 plot(residential_ts,main = "Fréquentation des zones résidentielles")
