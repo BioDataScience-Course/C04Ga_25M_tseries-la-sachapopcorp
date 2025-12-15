@@ -17,6 +17,8 @@ lang: fr
 
 <!--% Rédigez l'introduction de ce rapport.-->
 
+Tout au long de l'année, la fréquentation de certains lieux varie selon les périodes. Par exemple, une baisse de fréquentation du lieu de travail est souvent observée durant les vacances d'été. La fréquentation de certains lieux peut donc être anticipée ou cyclique, mais des situations exceptionnelles peuvent impacter directement celle des lieux du quotidien, comme ce fut le cas lors de la pandémie de Covid-19. Le confinement et l'ensemble des restrictions qui en ont découlé ont fortement influencé le quotidien de chacun.
+
 ## But
 
 <!--% Rédigez le but de ce rapport.-->
