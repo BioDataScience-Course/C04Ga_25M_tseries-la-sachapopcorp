@@ -322,7 +322,7 @@ plot(workweek_trend, main = "Test de tendance - série hebdomadaire")
 par(mfrow = c(1,1))
 ```
 
-Sur l'échelle hebdomadaire, on voit la même histoire, avec une chute de plus de 60% des fréquentations des lieux de travail. L'ACF montre une forte autocorrélation positivie sur des petit lags qui décroit lentement, la série n'est pas stationnaire.
+Sur l'échelle hebdomadaire, on voit la même histoire, avec une chute de plus de 60% des fréquentations des lieux de travail. L'ACF montre une forte autocorrélation positive sur des petit lags qui décroit lentement, la série n'est pas stationnaire.
 
 Les tendances persistent à l'échelle hebdomaire.
 

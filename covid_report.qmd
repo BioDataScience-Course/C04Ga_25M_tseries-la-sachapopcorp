@@ -37,6 +37,35 @@ L’analyse est réalisée dans la [SciViews Box 2025](https://www.sciviews.org/
 
 <!--% Présentez les analyses les plus pertinents que vous avez sélectionnés. Structurez la section en partie avec des titres explicites de niveau trois.-->
 
+###Influence- sur le monde du travail
+
+```{r}
+plot(workweek2, main = "Fréquentation hebdomadaire des lieux de travail", ylab = "% par rapport à la base", xlab = "")
+```
+
+La chute drastique de la fréquentation des lieux de travail peut se voir sur ce graphique, avec le début du confinement qui mène ce paramètre au point le plus bas du temps considéré. 
+
+```{r}
+spectrum(workweek, spans = c(3,5), main = "Spectre - série hebdomadaire")
+```
+
+D'après l'analyse spectrale, il semble qu'il existe 3 cycles mais au vu de la forte proximité au seuil du 3ème, nous ne le considérerons pas. Il faut aussi prendre en compte que l'étude ne s'est faite que sur un cadre de deux ans, il peut être aussi compliqué considérer que ce spectre ait une réelle valeur pour la démonstration.
+
+```{r}
+plot(workweek_trend_test, main = "Test de tendance - série hebdomadaire")
+par(mfrow = c(1,1))
+```
+
+En revanche, le test de tendance semble confirmer la présence d'une tendance.
+
+```{r}
+plot(workweek_loess, main = "Décomposition - lieux de travail (hebdom.)")
+```
+
+En décomposant la série temporelle, on peut effectivement voir une tendance de la fréquentation du milieu de travail à remonter. Cela semble logique car la société commence à reprendre son cours malgré la pandémie mais on voit aussi que le niveau de fréquentation initial n'est pas rétabli dans le laps de temps. On voit aussi une certaine saisonnalité dans un motif qui semble se répéter annuellement.
+
+
+
 ## Discussion et Conclusion
 
 <!--% En tenant compte du but de votre carnet de notes et de vos résultats, discutez de résultats et proposez des conclusions à votre analyse en 5 à 10 phrases. -->
