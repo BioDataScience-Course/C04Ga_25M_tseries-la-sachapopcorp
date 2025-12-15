@@ -23,9 +23,15 @@ Tout au long de l'année, la fréquentation de certains lieux varie selon les p�
 
 <!--% Rédigez le but de ce rapport.-->
 
+Ce rapport va essayer de mettre en évidence les effets de la Covid19 sur tout un aspect du fonctionnement de la société, d'un point de vue économique comme social.
+
 ## Matériel et méthodes
 
 <!--% Cette section doit comprendre deux parties. La première partie doit expliciter le données employées et la seconde traiter des analyses réalisées et des logiciels employés.-->
+
+Les données utilisées sont celles des rapports de mobilité communautaire COVID-19 de Google pour la Wallonie (Google COVID-19 Community Mobility Reports). Elles donnent, pour chaque jour, la variation en pourcentage de la fréquentation de six types de lieux (vente au détail et loisirs, épiceries et pharmacies, parcs, stations de transport en commun, lieux de travail, zones résidentielles) par rapport à une période de référence avant la pandémie. Dans ce travail, on se concentre surtout sur la période 2020–2021, qui correspond aux années où les mesures liées à la COVID-19 ont le plus modifié la mobilité en Wallonie.
+
+L’analyse est réalisée dans la [SciViews Box 2025](https://www.sciviews.org/software/svbox/) sur [Saturn Cloud](https://saturncloud.io) (Linux Ubuntu 22.04) avec le logiciel R (`r R.version.string`). On utilise l’environnement `SciViews::R("ts", lang = "fr")` et les fonctions “speedy” pour renommer les variables, garder les colonnes utiles et préparer les séries. Les pourcentages de variation sont transformés en séries temporelles journalières régulières (`ts`, fréquence 365). Pour certaines variables, on construit aussi des séries hebdomadaires (parfois en mettant les week-ends à NA et en agrégeant ensuite par moyenne hebdomadaire) (aggregate()). La structure temporelle est étudiée avec la fonction d’autocorrélation (acf()), l’analyse spectrale (spectrum()) et des tests de tendance (trend.test() du package {pastecs} `r packageVersion("pastecs")`). Enfin, on décompose les séries en tendance, composante saisonnière et résidus avec tsd() (méthodes average et loess), appliqué séparément aux différentes catégories de lieux selon la personne du groupe responsable de chaque série.
 
 ## Résultats
 
