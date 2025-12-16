@@ -43,7 +43,7 @@ L’analyse est réalisée dans la [SciViews Box 2025](https://www.sciviews.org/
 plot(workweek2, main = "Fréquentation hebdomadaire des lieux de travail", ylab = "% par rapport à la base", xlab = "")
 ```
 
-La chute drastique de la fréquentation des lieux de travail peut se voir sur ce graphique, avec le début du confinement qui mène ce paramètre au point le plus bas du temps considéré. 
+La chute drastique de la fréquentation des lieux de travail peut se voir sur ce graphique, avec le début du confinement qui mène ce paramètre au point le plus bas du temps considéré.
 
 ```{r}
 spectrum(workweek, spans = c(3,5), main = "Spectre - série hebdomadaire")
@@ -63,8 +63,6 @@ plot(workweek_loess, main = "Décomposition - lieux de travail (hebdom.)")
 ```
 
 En décomposant la série temporelle, on peut effectivement voir une tendance de la fréquentation du milieu de travail à remonter. Cela semble logique car la société commence à reprendre son cours malgré la pandémie mais on voit aussi que le niveau de fréquentation initial n'est pas rétabli dans le laps de temps. On voit aussi une certaine saisonnalité dans un motif qui semble se répéter annuellement.
-
-
 
 ## Discussion et Conclusion
 
