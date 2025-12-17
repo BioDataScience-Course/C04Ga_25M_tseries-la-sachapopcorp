@@ -411,6 +411,7 @@ spectrum(retail_filt, spans = c(3.5), "Spectre filtered - Fréquentation des lie
 Sur le periodigramme de la composante filtré on ne remarque qu'un seul pic proche de 0 dans l'intervalle de confiance. Il ne semble donc pas avoir de tendance dans ce cas.
 
 ```{r}
+#Abandonner car trop puissant ! 
 retail_loess <- tsd(retail_ts1, method = "loess", s.window = 7, trend = TRUE)
 plot(retail_loess, col = 1:4, main = "Décomposition - Fréquentation des lieux de vente au détail et loisirs")
 ```
@@ -450,16 +451,15 @@ Les outils statistiques (ACF et Périodogramme) confirment que les données ne s
 Enfin, le test de tendance valide statistiquement cette croissance globale. Les graphiques de distribution (Histogramme et Q-Q plot) indiquent que le modèle est fiable, confirmant que le secteur a réussi à stabiliser sa fréquentation de semaine malgré les perturbations passées.
 
 ```{r}
-#retaitw_tsd <- tsd(retailw_ts2, method = "average", order = 4)
-#plot(retail_tsd, col = 1:3)
+retaitw_tsd <- tsd(retailw_ts2, method = "average", order = 2)
+plot(retail_tsd, col = 1:3, main = "Fréquentation des lieux de vente au détail et loisirs")
 
-retailw_loess <- tsd(retailw_ts2, method = "loess", s.window = 10)
-plot(retailw_loess, col = 1:4)
+#retailw_loess <- tsd(retailw_ts2, method = "loess", s.window = 10)
+#plot(retailw_loess, col = 1:4)
 ```
+Le lissage par moyenne mobile gomme les instabilités pour révéler le mouvement de fond. Il confirme une remontée constante après le choc brutal de 2020. La courbe ainsi filtrée montre que la fréquentation s'est stabilisée fin 2021 à un niveau proche de l'avant-crise, avec des fluctuations beaucoup plus sereines en 2022.
 
-En retirant la composante saisonnière, la courbe deseasoned met en évidence la tendance et le cycle à long terme de vos données. Elle confirme que, malgré les variations de court terme, le mouvement de fond est une remontée constante après le chut burtale dû au confinement de 2020. Le lissage permet de voir que la fréquentation des zones de vente au détail et des loisirs par rapport à la valeur prise en référence semble s'être stabilisée à un niveau légèrement supérieur à celui de l'avant-crise vers la fin 2021, avant de fluctuer plus calmement en 2022.
-
-La partie seasonal isole les variations qui se répètent à intervalles réguliers au cours de l'année. il y a cycle avec des pics et des creux qui reviennent périodiquement. L'amplitude de ces cycles semble relativement stable (entre -20 et +15 environ), ce qui suggère que les comportements d'achat hebdomadaires conservent une certaine saisonnalité propre, indépendamment des chocs économiques majeurs subis par la série globale.
+En isolant les écarts entre la série brute et la moyenne mobile, on observe que les variations de court terme restent contenues dans une amplitude stable (environ -20 à +15). Cela prouve que, malgré les crises, les habitudes cycliques (rythmes hebdomadaires) sont restées très régulières et n'ont pas été structurellement modifiées.
 
 ```{r weekend}
 feur_datewk <- feur_date
@@ -491,13 +491,13 @@ Pour le périodigramme lissé, on observe un pic important situé à gauche du g
 L'histogramme bien centré et l'alignement presque parfait des points sur la droite du graphique Q-Q démontrent que les erreurs du modèle sont bien réparties. Cela valide statistiquement la fiabilité de l'analyse, prouvant que le modèle utilisé reflète fidèlement la réalité des données observées.
 
 ```{r}
-retailwk_loess <- tsd(retailwk_ts2, method = "loess", s.window = 7)
-plot(retailw_loess, col = 1:4)
+retailwk_loess <- tsd(retailwk_ts2, method = "average", order = 3)
+plot(retailwk_loess, col = 1:4, main = "Fréquentation des lieux de vente au détail et loisirs pour le weekend")
 ```
 
-La courbe deseasoned combine la tendance de fond et les résidus après retrait des cycles saisonniers. Elle permet d'observer la trajectoire réelle de l'activité, mettant en évidence encore une fois une chute drastique en 2020 et une reprise progressive mais instable. Le fait que cette courbe dépasse son niveau d'origine en fin de période confirme que la dynamique structurelle des week-ends a fini par surpasser la situation d'avant-crise.
+L'application de la moyenne mobile permet de lisser les données pour mieux visualiser la trajectoire pour les weekend. On observe une reprise nette après la chute brutale initiale (confinement). La fréquentation se stabilise à partir de l'indice 80 environ, retrouvant un niveau proche de la référence zéro, avec des fluctuations beaucoup plus modérées sur la fin de la période.
 
-La courbe seasonal isole les variations cycliques répétitives, avec des amplitudes marquées oscillant entre +20 et -30. L'aspect irrégulier de ces cycles montre que la saisonnalité des week-ends n'est pas figée, mais évolue légèrement au fil du temps, reflétant des comportements d'achat ou de loisirs qui, bien que périodiques, restent sensibles au calendrier et aux changements d'habitudes.
+La courbe des résidus montre les écarts entre les données réelles et la moyenne mobile. Ces variations sont faibles et stables (majoritairement entre -10 et +10), ce qui indique que votre moyenne mobile d'ordre 3 capture efficacement l'essentiel du mouvement. Les pics isolés représentent des anomalies ponctuelles ou des évènements spécifiques qui s'écartent de la tendance lissée.
 
 ```{r}
 resid_ts1 <- ts(feur_date$residential, start = c(2020, 46), frequency = 365)
