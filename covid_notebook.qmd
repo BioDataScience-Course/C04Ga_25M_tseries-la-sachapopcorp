@@ -363,8 +363,8 @@ Partie Tanguy
 
 Pour cette analyse, nous allons nous concentrer sur la variation du pourcentage de la fréquentation des zones de vente au détail et des loisirs par rapport à la période prise comme référence. En reprenant les dates entre le 15 février 2020 et le 31 décembre 2021.
 
-```{r}
-feur_date<-sfilter(feur, date >= as.Date("2020-02-15"),  date <= as.Date("2022-12-31"))
+```{r série brute/acf/spectrum}
+feur_date<-sfilter(feur, date >= as.Date("2020-02-15"),  date <= as.Date("2021-12-31"))
 
 retail_ts1 <- ts(feur_date$retail, start = c(2020, 46), frequency = 365)
 par(mfrow = c(2,2), mar = c(3, 3, 2, 1))
@@ -378,7 +378,7 @@ Une augmentation des fréquentation à la fin de confinement, et on peut observe
 Sur ce graphique de l'autocorrélation, on voit une décroissance assez lente. Cela signifie que la fréquentation d'un jour est fortement corrélée avec la fréquentation de nombreux jours précédents.
 
 
-```{r}
+```{r analyse série}
 set.seed(144946)
 retail_trend <- trend.test(retail_ts1, R = 999)
 plot(retail_trend, main = "Test de tendance-Fréquentation des lieux de vente au détail et loisirs")
@@ -388,7 +388,7 @@ En faisant une analyse de la tendance générale en utilisant la méthode bootst
 
 
 
-```{r}
+```{r analyse série avec average}
 retail_tsd <- tsd(retail_ts1, method = "average", order = 3)
 plot(retail_tsd, col = 1:3, main = "Décomposotion moyenne mobile-Fréquentation des lieux de vente au détail et loisirs")
 ```
@@ -396,14 +396,14 @@ En filtrant la série avec la moyenne mobile, on remarque pour la composante fil
 
 Une fois que cette tendance est retirée , les résidus expose principalement de la saisonnalité à courte période (hebdomadaire) et des évènements ponctuels.
 
-```{r}
+```{r analyse residual}
 retail_resid <- extract(retail_tsd, components = "residuals")
 plot(retail_resid)
 spectrum(retail_resid, spans = c(3.5), main = "Spectre résidus - Fréquentation des lieux de vente au détail et loisirs")
 ```
 En s'intéressant au périodigramme lissé pour la distribution des résidus, on remarque un pic principal à 50 suivit par deux autres à 110 et 160. Cela indique qu'il existe un cycle régulier dans la série, qui se répète avec une fréquence de 50 à 55 ou le cycle est au-dessus des limites de confiance bleues.
 
-```{r}
+```{r analyse filtered}
 retail_filt <- extract(retail_tsd, components = "filtered")
 plot(retail_filt)
 spectrum(retail_filt, spans = c(3.5), "Spectre filtered - Fréquentation des lieux de vente au détail et loisirs")
@@ -412,21 +412,21 @@ Sur le periodigramme de la composante filtré on ne remarque qu'un seul pic proc
 
 ```{r}
 #Abandonner car trop puissant ! 
-retail_loess <- tsd(retail_ts1, method = "loess", s.window = 7, trend = TRUE)
-plot(retail_loess, col = 1:4, main = "Décomposition - Fréquentation des lieux de vente au détail et loisirs")
+#retail_loess <- tsd(retail_ts1, method = "loess", s.window = 7, trend = TRUE)
+#plot(retail_loess, col = 1:4, main = "Décomposition - Fréquentation des lieux de vente au détail et loisirs")
 ```
 
 Cette décomposition montre que la fréquentation des zones de vente au détail, après avoir subi une chute initiale brutale, a suivi une dynamique de reprise caractérisée par une tendance à la hausse qui semble constante avant de se stabiliser sur un plateau en fin de période. Le signal est fortement marqué par une saisonnalité régulière, révélant des cycles de fréquentation récurrents, tandis que l'analyse des résidus montre des variations imprévisibles, des moments où la fréquentation a été anormalement haute ou basse à cause d'évènements exceptionnels (comme une météo particulière ou un jour férié) qui ne se répètent pas régulièrement. qui s'écartent du comportement habituel. 
 En résumé, le graphique illustre un retour progressif à la normale de l'activité, avec une saisonnalité rythmé par des habitudes cycliques mais restant sensible à des variations imprévisibles.
 
-```{r sélection jour de la semaine}
+```{r sélection  des jours de la semaine}
 feur_datew <- feur_date
 # Calcul des jours de la semaine
 feur_datew$weekdays <- weekdays(as.POSIXct(feur_datew$date))
 # Les données du week-end sont remplacées par des valeurs manquantes
 feur_datew[feur_datew$weekdays == "Saturday" | feur_datew$weekdays == "Sunday" , 2:7] <- NA 
 # La série temporelle est créée (début le 15 février 2020 = 46e jour de l'année 2020)
-retailw_ts <- ts(feur_datew$retail, end = c(2021, 46), frequency = 365)
+retailw_ts <- ts(feur_datew$retail, start = c(2021, 46), frequency = 365)
 plot(retailw_ts)
 # Aggrégation par moyenne des valeurs par semaine
 retailw_ts2 <- aggregate(retailw_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
@@ -436,7 +436,7 @@ plot(retailw_ts2, main = "Série des jours de la semaine - Fréquentation des li
 
 En isolant les jours de la semaine, on observe que la fréquentation suit une trajectoire de reprise plus hachée que la tendance globale, marquée par une chute brutale à près de -80% lors du choc initial suivie de plusieurs rechutes significatives entre fin 2020 et début 2021. Cette approche permet de confirmer que l'activité "de routine" a fini par se stabiliser au-dessus de son niveau de référence à partir de la mi-2021, tout en révélant que les jours ouvrés restent sujets à des variations plus nettes que la tendance générale lissée.
 
-```{r}
+```{r analyse série avec uniquement les jours de la semaine}
 acf(retailw_ts2)
 spectrum(retailw_ts2, spans = c(3,5))
 set.seed(451981998)
@@ -450,18 +450,18 @@ Les outils statistiques (ACF et Périodogramme) confirment que les données ne s
 
 Enfin, le test de tendance valide statistiquement cette croissance globale. Les graphiques de distribution (Histogramme et Q-Q plot) indiquent que le modèle est fiable, confirmant que le secteur a réussi à stabiliser sa fréquentation de semaine malgré les perturbations passées.
 
-```{r}
+```{r lissage série semaine}
 retailw_tsd <- tsd(retailw_ts2, method = "average", order = 26)
 plot(retailw_tsd, col = 1:3, main = "Fréquentation des lieux de vente au détail et loisirs")
 
 #retailw_loess <- tsd(retailw_ts2, method = "loess", s.window = 10)
 #plot(retailw_loess, col = 1:4)
 ```
-On y distingue clairement une phase de transition : après le choc initial, la fréquentation entame une progression constante qui franchit la ligne du zéro durant l'année 2021. La stabilisation finale en haut de graphique confirme que les comportements se sont fixés sur un nouveau palier de référence, supérieur à la période pré-pandémie, ce qui suggère un changement structurel et durable des habitudes de fréquentation des lieux de ventes au détails et des loisirs en semaine.
+On y distingue clairement une phase de transition : après le choc initial, la fréquentation entame une progression constante qui franchit la ligne du zéro vers la fin  d'année 2022. La stabilisation finale en haut confirme que les comportements se sont fixés sur un nouveau palier de référence, supérieur à la période pré-pandémie, ce qui suggère un changement structurel et durable des habitudes de fréquentation des lieux de ventes au détails et des loisirs en semaine.
 
-En début de période, ces barres sont très allongées, reflétant l'amplitude extrême des perturbations liées au confinement qui provoque une rupture brutale visible dans les données. À l'inverse, en 2022, les résidus s'écrasent et se resserrent autour de l'axe central. Ce passage de fortes oscillations à des variations très réduites indique que la série a regagné en régularité, les facteurs de perturbation externes ayant perdu de leur intensité. La population a repris ces habitudes après la sortie du confinement.
+En début de période, ces barres sont très allongées, reflétant l'amplitude extrême des perturbations liées au confinement qui provoque une rupture brutale visible dans les données. À l'inverse, en 2022, les résidus s'écrasent et se resserrent autour de l'axe central. Le passage de fortes oscillations à des variations très réduites indique que la série a regagné en régularité, les facteurs de perturbation externes ayant perdu de leur intensité. La population a repris ces habitudes après la sortie du confinement.
 
-```{r weekend}
+```{r série avec uniquement les weekends}
 feur_datewk <- feur_date
 feur_datewk$weekdays <- weekdays(as.POSIXct(feur_datewk$date))
 # Les données du week-end sont remplacées par des valeurs manquantes
@@ -476,7 +476,7 @@ plot(retailwk_ts2,  main = "Série weekend - Fréquentation des lieux de vente a
 
 La série des week-ends montre une chute initiale extrêmement brutale, atteignant environ -85 % début 2020, suivie d'une reprise très instable et marquée par de fortes rechutes jusqu'à la mi-2021. Contrairement aux jours de la semaine, la fréquentation des week-ends affiche une irrégularité beaucoup plus élevée, avec des pics dépassant les +30 % fin 2022 et un retour au niveau de référence nettement plus vigoureux. En résumé, l'activité de week-end a retrouvé une dynamique de croissance plus forte que celle de la semaine, bien qu'elle reste ponctuée de changements soudains et importants.
 
-```{r}
+```{r anaalyse série weekend}
 acf(retailwk_ts2)
 spectrum(retailwk_ts2, spans = c(3,5))
 set.seed(4464756)
@@ -490,14 +490,14 @@ Pour le périodigramme lissé, on observe un pic important situé à gauche du g
 
 L'histogramme bien centré et l'alignement presque parfait des points sur la droite du graphique Q-Q démontrent que les erreurs du modèle sont bien réparties. Cela valide statistiquement la fiabilité de l'analyse, prouvant que le modèle utilisé reflète fidèlement la réalité des données observées.
 
-```{r}
+```{r lisage série weekend}
 retailwk_loess <- tsd(retailwk_ts2, method = "average", order = 26)
 plot(retailwk_loess, col = 1:4, main = "Fréquentation des lieux de vente au détail et loisirs pour le weekend")
 ```
 
 la fréquentation durant les weekends montre une reprise progressive et quasi linéaire après le choc initial de 2020, illustrant une normalisation constante des comportements de consommation et de loisirs sur deux ans. Le fait que la pente soit positive et régulière indique que la dynamique de retour dans les commerces est structurelle et ne dépend pas seulement d'effets de mode passagers.
 
-Pour les résidus on voit très clairement l'instabilité extrême de l'année 2020 avec des pics et des creux profonds qui traduisent les réactions immédiates aux annoncesde confinements et déconfinements corrélés avec la réouverture des magasins et loisirs. À mesure que l'on avance vers 2022, l'amplitude de ces barres vertes diminue fortement, ce qui signifie que la fréquentation durant les week-ends est devenue beaucoup plus stable et prévisible avec le temps.
+Pour les résidus on voit très clairement l'instabilité extrême de l'année 2020 avec des pics et des creux profonds qui traduisent les réactions immédiates aux annoncesde confinements et déconfinements corrélés avec la réouverture des magasins et loisirs. À mesure que l'on avance vers 2021, l'amplitude de ces barres vertes diminue fortement, ce qui signifie que la fréquentation durant les week-ends est devenue beaucoup plus stable et prévisible avec le temps.
 
 ```{r}
 resid_ts1 <- ts(feur_date$residential, start = c(2020, 46), frequency = 365)
