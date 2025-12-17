@@ -381,7 +381,7 @@ Sur ce graphique de l'autocorrélation, on voit une décroissance assez lente. C
 ```{r}
 set.seed(144946)
 retail_trend <- trend.test(retail_ts1, R = 999)
-plot(retail_trend)
+plot(retail_trend, main = "Test de tendance-Fréquentation des lieux de vente au détail et loisirs")
 ```
 
 En faisant une analyse de la tendance générale en utilisant la méthode bootstrap, on remarque que notre histogramme se trouve à gauche de la valeur t bootstrappée. Cela signifie que p est inférieur à α, nous rejetons donc H0 et concluons qu’une tendance générale significative au seuil α existe dans la série.
@@ -390,8 +390,7 @@ En faisant une analyse de la tendance générale en utilisant la méthode bootst
 
 ```{r}
 retail_tsd <- tsd(retail_ts1, method = "average", order = 3)
-plot(retail_tsd, col = 1:3)
-#retail_tsd_series<- tseries(retail_tsd)
+plot(retail_tsd, col = 1:3, main = "Décomposotion moyenne mobile-Fréquentation des lieux de vente au détail et loisirs")
 ```
 En filtrant la série avec la moyenne mobile, on remarque pour la composante filtered reprend globalement la même tendance que la série brute, c'est à dire avec un choc dû au premier confinement.
 
@@ -400,20 +399,20 @@ Une fois que cette tendance est retirée , les résidus expose principalement de
 ```{r}
 retail_resid <- extract(retail_tsd, components = "residuals")
 plot(retail_resid)
-spectrum(retail_resid, spans = c(3.5))
+spectrum(retail_resid, spans = c(3.5), main = "Spectre résidus - Fréquentation des lieux de vente au détail et loisirs")
 ```
 En s'intéressant au périodigramme lissé pour la distribution des résidus, on remarque un pic principal à 50 suivit par deux autres à 110 et 160. Cela indique qu'il existe un cycle régulier dans la série, qui se répète avec une fréquence de 50 à 55 ou le cycle est au-dessus des limites de confiance bleues.
 
 ```{r}
 retail_filt <- extract(retail_tsd, components = "filtered")
 plot(retail_filt)
-spectrum(retail_filt, spans = c(3.5))
+spectrum(retail_filt, spans = c(3.5), "Spectre filtered - Fréquentation des lieux de vente au détail et loisirs")
 ```
 Sur le periodigramme de la composante filtré on ne remarque qu'un seul pic proche de 0 dans l'intervalle de confiance. Il ne semble donc pas avoir de tendance dans ce cas.
 
 ```{r}
 retail_loess <- tsd(retail_ts1, method = "loess", s.window = 7, trend = TRUE)
-plot(retail_loess, col = 1:4)
+plot(retail_loess, col = 1:4, main = "Décomposition - Fréquentation des lieux de vente au détail et loisirs")
 ```
 
 Cette décomposition montre que la fréquentation des zones de vente au détail, après avoir subi une chute initiale brutale, a suivi une dynamique de reprise caractérisée par une tendance à la hausse qui semble constante avant de se stabiliser sur un plateau en fin de période. Le signal est fortement marqué par une saisonnalité régulière, révélant des cycles de fréquentation récurrents, tandis que l'analyse des résidus montre des variations imprévisibles, des moments où la fréquentation a été anormalement haute ou basse à cause d'évènements exceptionnels (comme une météo particulière ou un jour férié) qui ne se répètent pas régulièrement. qui s'écartent du comportement habituel. 
@@ -430,7 +429,7 @@ retailw_ts <- ts(feur_datew$retail, start = c(2020, 46), frequency = 365)
 plot(retailw_ts)
 # Aggrégation par moyenne des valeurs par semaine
 retailw_ts2 <- aggregate(retailw_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
-plot(retailw_ts2)
+plot(retailw_ts2, main = "Série des jours de la semaine - Fréquentation des lieux de vente au détail et loisirs")
 
 ```
 
@@ -454,13 +453,13 @@ Enfin, le test de tendance valide statistiquement cette croissance globale. Les 
 #retaitw_tsd <- tsd(retailw_ts2, method = "average", order = 4)
 #plot(retail_tsd, col = 1:3)
 
-retailw_loess <- tsd(retailw_ts2, method = "loess", s.window = 5)
+retailw_loess <- tsd(retailw_ts2, method = "loess", s.window = 10)
 plot(retailw_loess, col = 1:4)
 ```
 
-La série temporelle montre une reprise progressive mais instable après le choc de 2020, avec des rechutes marquées en 2021 avant une stabilisation au-dessus du niveau de référence en 2022. Les outils statistiques (ACF et périodogramme) confirment que cette évolution n'est pas aléatoire mais dictée par une tendance de fond dominante et une forte dépendance entre les semaines successives.
+En retirant la composante saisonnière, la courbe deseasoned met en évidence la tendance et le cycle à long terme de vos données. Elle confirme que, malgré les variations de court terme, le mouvement de fond est une remontée constante après le chut burtale dû au confinement de 2020. Le lissage permet de voir que la fréquentation des zones de vente au détail et des loisirs par rapport à la valeur prise en référence semble s'être stabilisée à un niveau légèrement supérieur à celui de l'avant-crise vers la fin 2021, avant de fluctuer plus calmement en 2022.
 
-Le modèle de tendance est validé par des tests de diagnostic robustes. L'analyse des résidus et le graphique Quantile-Quantile montrent une distribution équilibrée, ce qui prouve que la trajectoire haussière observée est structurelle et fiable pour décrire la réalité de la fréquentation en semaine.
+La partie seasonal isole les variations qui se répètent à intervalles réguliers au cours de l'année. il y a cycle avec des pics et des creux qui reviennent périodiquement. L'amplitude de ces cycles semble relativement stable (entre -20 et +15 environ), ce qui suggère que les comportements d'achat hebdomadaires conservent une certaine saisonnalité propre, indépendamment des chocs économiques majeurs subis par la série globale.
 
 ```{r weekend}
 feur_datewk <- feur_date
@@ -471,8 +470,8 @@ feur_datewk[feur_datewk$weekdays == c("Monday") |feur_datewk$weekdays == c("Tues
 retailwk_ts <- ts(feur_datewk$retail, start = c(2020, 46), frequency = 365)
 plot(retailwk_ts)
 # Aggrégation par moyenne des valeurs par semaine
-retailwk_ts2 <- aggregate(retailwk_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
-plot(retailwk_ts2)
+retailwk_ts2 <- aggregate(retailw_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(retailwk_ts2,  main = "Série weekend - Fréquentation des lieux de vente au détail et loisirs")
 ```
 
 La série des week-ends montre une chute initiale extrêmement brutale, atteignant environ -85 % début 2020, suivie d'une reprise très instable et marquée par de fortes rechutes jusqu'à la mi-2021. Contrairement aux jours de la semaine, la fréquentation des week-ends affiche une irrégularité beaucoup plus élevée, avec des pics dépassant les +30 % fin 2022 et un retour au niveau de référence nettement plus vigoureux. En résumé, l'activité de week-end a retrouvé une dynamique de croissance plus forte que celle de la semaine, bien qu'elle reste ponctuée de changements soudains et importants.
@@ -492,12 +491,25 @@ Pour le périodigramme lissé, on observe un pic important situé à gauche du g
 L'histogramme bien centré et l'alignement presque parfait des points sur la droite du graphique Q-Q démontrent que les erreurs du modèle sont bien réparties. Cela valide statistiquement la fiabilité de l'analyse, prouvant que le modèle utilisé reflète fidèlement la réalité des données observées.
 
 ```{r}
-#retaitwk_tsd <- tsd(retailwk_ts2, method = "average", order = 4)
-#plot(retail_tsd, col = 1:3)
-
 retailwk_loess <- tsd(retailwk_ts2, method = "loess", s.window = 7)
 plot(retailw_loess, col = 1:4)
 ```
+
+La courbe deseasoned combine la tendance de fond et les résidus après retrait des cycles saisonniers. Elle permet d'observer la trajectoire réelle de l'activité, mettant en évidence encore une fois une chute drastique en 2020 et une reprise progressive mais instable. Le fait que cette courbe dépasse son niveau d'origine en fin de période confirme que la dynamique structurelle des week-ends a fini par surpasser la situation d'avant-crise.
+
+La courbe seasonal isole les variations cycliques répétitives, avec des amplitudes marquées oscillant entre +20 et -30. L'aspect irrégulier de ces cycles montre que la saisonnalité des week-ends n'est pas figée, mais évolue légèrement au fil du temps, reflétant des comportements d'achat ou de loisirs qui, bien que périodiques, restent sensibles au calendrier et aux changements d'habitudes.
+
+```{r}
+resid_ts1 <- ts(feur_date$residential, start = c(2020, 46), frequency = 365)
+
+resid_loess <- tsd(resid_ts1, method = "loess", s.window = 7)
+plot(resid_loess, col = 1:3)
+```
+
+La courbe deseasonal permet de voir que, malgré les nombreux pics dans la série originale, la tendance globale montre une forte hausse initiale (vers l'indice 100) suivie d'une stabilisation progressive avec quelques fluctuations mineures.
+
+Le graphique de seasonal isole les variations cycliques régulières. Avec une fenêtre de 7, l'algorithme a capturé un motif hebdomadaire très marqué qui se répète sur toute la durée de la série. On remarque que l'amplitude de cette saisonnalité n'est pas constante.
+
 <!--% Lorsque toutes les analyses sont réalisées, terminez ce bloc-notes avec 3 à 6 phrases de conclusion en rapport avec ce que vous avez observé dans vos analyses. Quels sont les éléments les plus pertinents que vous retenez ? ->
 
 ...vos conclusions ici...
