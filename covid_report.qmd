@@ -72,6 +72,11 @@ plot(retail_ts1, main = "Fréquentation des lieux de vente au détail et loisirs
 
 Cette série temporelle illustre l'impact des restrictions sanitaires sur la fréquentation des lieux de vente au détail et des loisirs entre 2020 et 2022. On y observe une trajectoire en "W" avec une première chute brutale de -80% lors du premier confinement, suivie d'une reprise éphémère, puis d'une seconde baisse plus étalée durant les vagues hivernales de 2020-2021. La période finale marque un retour à la normale, voire un dépassement de la valeur de référence. L'analyse révèle également ce qui semble être un cycle hebdomadaire couplée à des chocs ponctuels négatifs qui reflètent l'arrêt de l'activité lors des jours fériés.
 
+```{r tendance générale bootstrap retail}
+set.seed(144946)
+retail_trend <- trend.test(retail_ts1, R = 999)
+plot(retail_trend, main = "Test de tendance-Fréquentation des lieux de vente au détail et loisirs")
+```
 
 
 ## Discussion et Conclusion

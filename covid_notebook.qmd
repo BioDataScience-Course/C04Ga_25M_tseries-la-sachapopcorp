@@ -393,6 +393,7 @@ Quand au périodigramme on remarque qu'aucun cycle significatif se semble appara
 set.seed(144946)
 retail_trend <- trend.test(retail_ts1, R = 999)
 plot(retail_trend, main = "Test de tendance-Fréquentation des lieux de vente au détail et loisirs")
+retail_trend$p.value
 ```
 
 En faisant une analyse de la tendance générale en utilisant la méthode bootstrap, on remarque que notre histogramme se trouve à gauche de la valeur t bootstrappée. Cela signifie que p est inférieur à α, nous rejetons donc H0 et concluons qu’une tendance générale significative au seuil α existe dans la série.
