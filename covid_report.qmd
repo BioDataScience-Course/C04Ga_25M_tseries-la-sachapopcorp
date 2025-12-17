@@ -66,12 +66,12 @@ En décomposant la série temporelle, on peut effectivement voir une tendance de
 
 ### Influence sur les zones de vente au détail et des loisirs
 
-```{r}
+```{r série brute de retail}
 plot(retail_ts1, main = "Fréquentation des lieux de vente au détail et loisirs ", ylab = "% par rapport à la valeur de référence")
 ```
-Pour la série reprenant la variation pour la fréquentation des zones de vente au détail et des loisirs en comparaison avec une valeur de référence. On observe au début de l'année 2020 une chute drastique de la fréquentation de -80% en raison du confinement choisi par les autorités avec la pandémie de covid-19. On peut voir ensuite une augmentation, qui revient presque au niveau avant confinement lorsque celui-ci a été levé. Cependant une nouvelle baisse de la fréquentation, moins importante mais qui s'étale sur une plus longue période est visible entre fin 2020 et jusque mi 2021, celui est notamment dû à un second confinement décidé suite à une forte augmentation des cas de covid-19 à l'approche de l'hiver et au début du printemps. Enfin on remarque une nouvelle augmentation pour revenir au niveau d'avant pandémie même parfois supérieure.
 
-Au-delà de cette tendance de fond, la série est caractérisée par une forte saisonnalité de haute fréquence (probablement hebdomadaire) et par des variations accidentelles négatives très localisées. Ces pics de baisse extrêmes correspondent vraisemblablement à des jours fériés ou des fermetures légales, soulignant la sensibilité du secteur aux calendriers administratifs.
+Cette série temporelle illustre l'impact des restrictions sanitaires sur la fréquentation des lieux de vente au détail et des loisirs entre 2020 et 2022. On y observe une trajectoire en "W" avec une première chute brutale de -80% lors du premier confinement, suivie d'une reprise éphémère, puis d'une seconde baisse plus étalée durant les vagues hivernales de 2020-2021. La période finale marque un retour à la normale, voire un dépassement de la valeur de référence. L'analyse révèle également ce qui semble être un cycle hebdomadaire couplée à des chocs ponctuels négatifs qui reflètent l'arrêt de l'activité lors des jours fériés.
+
 
 
 ## Discussion et Conclusion
