@@ -64,6 +64,15 @@ plot(workweek_loess, main = "Décomposition - lieux de travail (hebdom.)")
 
 En décomposant la série temporelle, on peut effectivement voir une tendance de la fréquentation du milieu de travail à remonter. Cela semble logique car la société commence à reprendre son cours malgré la pandémie mais on voit aussi que le niveau de fréquentation initial n'est pas rétabli dans le laps de temps. On voit aussi une certaine saisonnalité dans un motif qui semble se répéter annuellement.
 
+### Influence sur les zones de vente au détail et des loisirs
+
+```{r}
+plot(retail_ts1, main = "Fréquentation des lieux de vente au détail et loisirs ", ylab = "% par rapport à la base")
+```
+
+
+
+
 ## Discussion et Conclusion
 
 <!--% En tenant compte du but de votre carnet de notes et de vos résultats, discutez de résultats et proposez des conclusions à votre analyse en 5 à 10 phrases. -->

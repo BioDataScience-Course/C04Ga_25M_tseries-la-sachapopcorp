@@ -359,9 +359,9 @@ La série brute reprend ce qu'on a dit au début, il y a une très grosse réduc
 La courbe seasonal identifie des motifs qui se répètent sur la durée, dont l'amplitude est modérée. Les creux marqués pourraient être l'hiver ou certains épisodes ou les mesures ont été de nouveau renforcés. La saisonalité reste plus petite que la tendance.
 
 
-Partie Tanguy
+### Analyse de la fréquantion des lieux de vente au détail et loisirs (Tanguy)
 
-Pour cette analyse, nous allons nous concentrer sur la variation du pourcentage de la fréquentation des zones de vente au détail et des loisirs par rapport à la période prise comme référence. En reprenant les dates entre le 15 février 2020 et le 31 décembre 2021.
+Pour cette analyse, nous allons nous concentrer sur la variation du pourcentage de la fréquentation des zones de vente au détail et des loisirs par rapport à la période prise comme référence.
 
 ```{r série brute/acf/spectrum}
 feur_date<-sfilter(feur, date >= as.Date("2020-02-15"),  date <= as.Date("2021-12-31"))
@@ -499,7 +499,9 @@ la fréquentation durant les weekends montre une reprise progressive et quasi li
 
 Pour les résidus on voit très clairement l'instabilité extrême de l'année 2020 avec des pics et des creux profonds qui traduisent les réactions immédiates aux annoncesde confinements et déconfinements corrélés avec la réouverture des magasins et loisirs. À mesure que l'on avance vers 2021, l'amplitude de ces barres vertes diminue fortement, ce qui signifie que la fréquentation durant les week-ends est devenue beaucoup plus stable et prévisible avec le temps.
 
-```{r}
+### Analyse de la fréquantion des zones résidentielles (Tanguy)
+
+```{r analyse fréquentation zone résidentielle}
 resid_ts1 <- ts(feur_date$residential, start = c(2020, 46), frequency = 365)
 
 resid_tsd <- tsd(resid_ts1, method = "average", order = 3)
