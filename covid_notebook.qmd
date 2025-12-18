@@ -506,20 +506,6 @@ plot(retailw_ts2, main = "Série des jours de la semaine - Fréquentation des li
 
 En isolant les jours de la semaine du weekend, on observe que la fréquentation suit une trajectoire de reprise plus hachée que la tendance globale, marquée par une chute brutale à près de -80% lors du choc initial suivie de plusieurs rechutes significatives entre fin 2020 et début 2021. Cette approche permet de confirmer que l'activité "de routine" a fini par se stabiliser au-dessus de son niveau de référence à partir de la mi-2021, tout en révélant que les jours ouvrés restent sujets à des variations plus nettes que la tendance générale lissée
 
-```{r analyse série avec uniquement les jours de la semaine}
-acf(retailw_ts2)
-spectrum(retailw_ts2, spans = c(3,5))
-set.seed(451981998)
-retailw_trend <- trend.test(retailw_ts2, R = 999)
-plot(retailw_trend)
-```
-
-L'étude de la série filtrée pour les jours de la semaine (retailw_ts2) montre une reprise irrégulière après la chute brutale de 2020. On observe plusieurs rechutes avant que la fréquentation ne se stabilise durablement au-dessus de son niveau initial à partir de la mi-2021.
-
-Les outils statistiques (ACF et Périodogramme) confirment que les données ne sont pas aléatoires mais suivent une logique de long terme. La décroissance lente de l'autocorrélation prouve que la fréquentation d'une semaine influence fortement la suivante, tandis que le périodogramme montre que la tendance de fond domine les variations rapides.
-
-Enfin, le test de tendance valide statistiquement cette croissance globale. Les graphiques de distribution (Histogramme et Q-Q plot) indiquent que le modèle est fiable, confirmant que le secteur a réussi à stabiliser sa fréquentation de semaine malgré les perturbations passées.
-
 ```{r lissage série semaine}
 retailw_tsd <- tsd(retailw_ts2, method = "average", order = 26)
 plot(retailw_tsd, col = 1:3, main = "Fréquentation des lieux de vente au détail et loisirs durant la semaine")
@@ -548,20 +534,6 @@ plot(retailwk_ts2,  main = "Série weekend - Fréquentation des lieux de vente a
 ```
 
 La série ne reprenant que les week-ends montre une chute initiale extrêmement brutale, atteignant environ -85 % début 2020, suivie d'une reprise très instable et marquée par de fortes rechutes jusqu'à la mi-2021. Contrairement aux jours de la semaine, la fréquentation des week-ends affiche une irrégularité beaucoup plus élevée, avec des pics dépassant les +30 % fin 2022 et un retour au niveau de référence nettement plus vigoureux. En la fin d'année 2021, on remarque une forte chute sans doute provoquer par les fêtes de fin d'année. En résumé, l'activité de week-end a retrouvé une dynamique de croissance plus forte que celle de la semaine, bien qu'elle reste ponctuée de changements soudains et importants.
-
-```{r analyse série weekend}
-acf(retailwk_ts2)
-spectrum(retailwk_ts2, spans = c(3,5))
-set.seed(4464756)
-retailwk_trend <- trend.test(retailwk_ts2, R = 999)
-plot(retailwk_trend)
-```
-
-L'ACF montre une diminution très lente et régulière, ce qui prouve que les données ne sont pas aléatoires. Cela signifie que la fréquentation d'un week-end est fortement influencée par celle des weekend précédents, confirmant l'existence d'une tendance de fond persistante.
-
-Pour le périodigramme lissé, on observe un pic important situé à gauche du graphique indique que les variations à cycle lent (la tendance de long terme) sont beaucoup plus puissantes que les fluctuations rapides.
-
-L'histogramme bien centré et l'alignement presque parfait des points sur la droite du graphique Q-Q démontrent que les erreurs du modèle sont bien réparties. Cela valide statistiquement la fiabilité de l'analyse, prouvant que le modèle utilisé reflète fidèlement la réalité des données observées.
 
 ```{r lisage série weekend}
 retailwk_loess <- tsd(retailwk_ts2, method = "average", order = 26)
