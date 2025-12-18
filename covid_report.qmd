@@ -39,6 +39,24 @@ L’analyse est réalisée dans la [SciViews Box 2025](https://www.sciviews.org/
 
 ### Influence sur les épiceries et pharmacies 
 
+```{r}
+plot(grocery_decomp_loess, col = 1:3)
+spectrum(grocery_loess[, "seasonal"], spans = c(5, 7))
+```
+
+```{r}
+spectrum(grocery_tswd2, spans = c(3, 5))
+grocery_decomp_loess2 <- tsd(grocery_tswd2, method = "average", order = 26)
+plot(grocery_decomp_loess2, col = 1:3)
+```
+
+```{r}
+acf(grocery_tswk2)
+plot(trend.test(grocery_tswk2, R = 999))
+grocery_decomp_loess3 <- tsd(grocery_tswk2, method = "average", order = 26)
+plot(grocery_decomp_loess2, col = 1:3)
+```
+
 ### Influence sur le monde du travail
 
 ```{r}
