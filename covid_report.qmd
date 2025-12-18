@@ -37,7 +37,9 @@ L’analyse est réalisée dans la [SciViews Box 2025](https://www.sciviews.org/
 
 <!--% Présentez les analyses les plus pertinents que vous avez sélectionnés. Structurez la section en partie avec des titres explicites de niveau trois.-->
 
-###Influence- sur le monde du travail
+### Influence sur les épiceries et pharmacies 
+
+### Influence sur le monde du travail
 
 ```{r}
 plot(workweek2, main = "Fréquentation hebdomadaire des lieux de travail", ylab = "% par rapport à la base", xlab = "")
@@ -78,8 +80,6 @@ retail_trend <- trend.test(retail_ts1, R = 999)
 plot(retail_trend, main = "Test de tendance-Fréquentation des lieux de vente au détail et loisirs")
 ```
 
-<<<<<<< HEAD
-=======
 D'après cette histogramme, que la p-value semble bien inférieur à la valeur seuil de 0.05 avec une valeur proche de 0. Nous rejetons H0 et on peut en conclure qu’une tendance générale significative au seuil α existe dans la série.
 
 ```{r}
@@ -90,8 +90,6 @@ En décomposant la série par moyenne mobile on peut voir que le filtrage repren
 
 En regardant les résidus, on peut voir de très nombreux pics, avec des valeurs extrêmes négatives qui peuvent s'expliquer par la fermeture les magasins de vente au détail et loisirs mais pas uniquement à cause de la pandémie. Les résidus semblent en parti suivre le calendrier avec des baisses de fréquention possible le dimanche ou les jours fériés de par leur fermeture mais aussi l'évolution du pouvoir d'achat pour les zones de vente au détail.
 
-
->>>>>>> ab364cbfb2be8a465500b4d205f6794b1549c840
 ## Discussion et Conclusion
 
 <!--% En tenant compte du but de votre carnet de notes et de vos résultats, discutez de résultats et proposez des conclusions à votre analyse en 5 à 10 phrases. -->
