@@ -53,7 +53,7 @@ feur <- read("data/mobility_wallonia.rds")
 
 <!--% Ajoutez le nombre de chunks que vous souhaitez. Répartissez-vous le travail correctement. Structurez la section en partie avec des titres explicites de niveau trois.-->
 
-```{r}
+```{r extraction et labelisation}
 
 feur %>.%
   smutate(., 
@@ -74,7 +74,7 @@ sselect(feur, c(1, 8, 9, 10, 11, 12, 13)) -> feur
 
 ```
 
-```{r}
+```{r transformation en ts}
 par(mfrow = c(3,2), mar = c(2,2,2,2))
 retail_ts <- ts(feur$retail, start = c(2020, 46), frequency = 365)
 grocery_ts <- ts(feur$grocery,  start = c(2020, 46), frequency = 365)
@@ -496,8 +496,6 @@ retailw_ts2 <- aggregate(retailw_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
 plot(retailw_ts2, main = "Série des jours de la semaine - Fréquentation des lieux de vente au détail et loisirs")
 
 ```
-
-
 
 En isolant les jours de la semaine du weekend, on observe que la fréquentation suit une trajectoire de reprise plus hachée que la tendance globale, marquée par une chute brutale à près de -80% lors du choc initial suivie de plusieurs rechutes significatives entre fin 2020 et début 2021. Cette approche permet de confirmer que l'activité "de routine" a fini par se stabiliser au-dessus de son niveau de référence à partir de la mi-2021, tout en révélant que les jours ouvrés restent sujets à des variations plus nettes que la tendance générale lissée
 
