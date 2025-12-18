@@ -453,8 +453,7 @@ En faisant une analyse de la tendance générale en utilisant la méthode bootst
 retail_tsd <- tsd(retail_ts1, method = "average", order = 3)
 plot(retail_tsd, col = 1:3, main = "Décomposotion moyenne mobile-Fréquentation des lieux de vente au détail et loisirs")
 ```
-
-En filtrant la série avec la moyenne mobile, on remarque pour la composante filtered expose la trajectoire de fond : une chute brutale et profonde qui forme un plateau bas à -80% lors du premier confinement, suivie d'une remontée progressive. La courbe marque ensuite une nouvelle flexion, moins prononcée à environ -40%, lors du second confinement, avant de repartir à la hausse.
+En lissant la série avec la moyenne mobile, on remarque pour la composante filtered expose la trajectoire de fond : une chute brutale et profonde qui forme un plateau bas à -80% lors du premier confinement, suivie d'une remontée progressive. La courbe marque ensuite une nouvelle flexion, moins prononcée à environ -40%, lors du second confinement, avant de repartir à la hausse.
 
 Avec les résidus on peut voir des pointes qui descendent très bas représentent des journées où la fréquentation a chuté ou augmenté de manière totalement isolée par rapport aux jours précédents (typiquement un jour férié ou une fermeture exceptionnelle). On remarque aussi que l'agitation de cette courbe est plus forte à la fin du graphique qu'au début, ce qui indique que la fréquentation est devenue beaucoup plus instable et irrégulière sur la dernière période.
 
@@ -480,6 +479,12 @@ Sur le periodigramme de la composante filtré on ne remarque qu'un seul pic proc
 #plot(retail_loess, col = 1:4, main = "Décomposition - Fréquentation des lieux de vente au détail et loisirs")
 ```
 
+<<<<<<< HEAD
+=======
+
+Je regarde maintenant si il y a une différence entre les jours de la semaine et du weekend.
+
+>>>>>>> ab364cbfb2be8a465500b4d205f6794b1549c840
 ```{r sélection  des jours de la semaine}
 feur_datew <- feur_date
 # Calcul des jours de la semaine
@@ -560,6 +565,8 @@ La série ne reprenant que les week-ends montre une chute initiale extrêmement 
 la fréquentation durant les weekends montre une reprise progressive et quasi linéaire après le choc initial de 2020, illustrant une normalisation constante des comportements de consommation et de loisirs sur deux ans. Le fait que la pente soit positive et régulière indique que la dynamique de retour dans les commerces est structurelle et ne dépend pas seulement d'effets de mode passagers.
 
 Pour les résidus on voit très clairement l'instabilité extrême de l'année 2020 avec des pics et des creux profonds qui traduisent les réactions immédiates aux annonces de confinements et déconfinements corrélés avec la réouverture des magasins et loisirs. À mesure que l'on avance vers 2021, l'amplitude de ces barres vertes diminue fortement, ce qui signifie que la fréquentation durant les week-ends est devenue beaucoup plus stable et prévisible avec le temps.
+
+Il ne semble pas avoir de différences notables entre les jours de la semaine et ceux du weekend concernant la fréquentation des zones de vente au détail mais aussi des loisirs. 
 
 ### Analyse de la fréquantion des zones résidentielles (Tanguy)
 
