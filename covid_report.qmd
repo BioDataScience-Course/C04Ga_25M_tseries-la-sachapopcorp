@@ -43,13 +43,19 @@ L’analyse est réalisée dans la [SciViews Box 2025](https://www.sciviews.org/
 plot(grocery_ts, main = "Fréquentation des épiceries et pharmacies durant la pandémie de Covid 19", xlab = "Années", ylab = "")
 ```
 
+Représentation graphique de la série initiale.
+
 ```{r}
 plot(grocery_decomp_loess, col = 1:3)
 ```
 
+La série a été décomposée par LOESS. Une tendance à la hausse se dégage de l'analyse. Il ne semble pas y avoir de grandes variations liées au confinement à première vue.
+
 ```{r}
 spectrum(grocery_loess[, "seasonal"], spans = c(5, 7))
 ```
+
+On observe grâce à l'analyse spectrale la présence d'un cycle significatif vers 50 ce qui représente un cycle significatif de 7 jours. Les fréquentations des épiceries et pharmacies ont l'air donc de varier de manière hebdomadaire.
 
 ```{r}
 grocery_decomp_loess2 <- tsd(grocery_tswd2, method = "average", order = 26)
@@ -57,10 +63,18 @@ plot(grocery_decomp_loess2, col = 1:3)
 
 ```
 
+Ici nous avons extraits les deux jours du week-ends de la série initiale pour analyser une possible tendance ou un possible cycle.
+
+Un tendance à la hausse se dégage plutôt bien lors de la réalisation de la LOESS, mais un palier est quand même présent au début, au tout début de la pandémie. On voit d'ailleurs assez bien la chute de fréquentation au début du confinement sur la série aggregée.
+
+Concerant les cycles, après une analyse spectrale, aucun cycle ne semble se dégager de manière significative, il ne semble donc pas y avoir de cycles dans notre série modifiée "semaine".
+
 ```{r}
 grocery_decomp_loess3 <- tsd(grocery_tswk2, method = "average", order = 26)
 plot(grocery_decomp_loess2, col = 1:3)
 ```
+
+La même analyse a été effectuée sur les jours de week-ends. Les résultats sont sensiblement identiques, il n'y a pas de cycles significatifs.
 
 ### Influence sur le monde du travail
 
