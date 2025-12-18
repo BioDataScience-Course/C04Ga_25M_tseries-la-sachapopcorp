@@ -131,8 +131,6 @@ plot(residential_ts_trend, main = "Fréquentation des zones résidentielles")
 #
 ```
 
-Partie Achille (parks et transit) :
-
 ### Analyse de la fréquentation des parcs. (Achille)
 
 ```{r}
@@ -419,8 +417,6 @@ La série brute reprend ce qu'on a dit au début, il y a une très grosse réduc
 
 La courbe seasonal identifie des motifs qui se répètent sur la durée, dont l'amplitude est modérée. Les creux marqués pourraient être l'hiver ou certains épisodes ou les mesures ont été de nouveau renforcés. La saisonalité reste plus petite que la tendance.
 
-En résumé, l’analyse de la fréquentation des lieux de travail en Wallonie montre un effondrement brutal de plus de 60 % au moment du premier confinement, suivi d’une remontée progressive qui reste toutefois nettement inférieure au niveau de référence pendant toute la période 2020–2021. Les ACF journalière et hebdomadaire confirment une forte dépendance temporelle et une série clairement non stationnaire, avec une saisonnalité surtout hebdomadaire. La décomposition LOESS de la série hebdomadaire met en évidence une tendance croissante mais toujours négative, ainsi qu’une composante saisonnière de faible amplitude par rapport au choc global. L’impact de la COVID-19 sur les déplacements vers les lieux de travail apparaît donc durable, même après la phase de confinement strict, la mobilité professionnelle ne revient pas totalement à la normale, ce qui suggère un maintien important du télétravail et une réduction persistante des déplacements domicile-travail.
-
 ### Analyse de la fréquantion des lieux de vente au détail et loisirs (Tanguy)
 
 Pour cette analyse, nous allons nous concentrer sur la variation du pourcentage de la fréquentation des zones de vente au détail et des loisirs par rapport à la période prise comme référence.
@@ -558,6 +554,8 @@ Les résidus montrent une amplitude des barres relativement stable, mais on rema
 \<!--% Lorsque toutes les analyses sont réalisées, terminez ce bloc-notes avec 3 à 6 phrases de conclusion en rapport avec ce que vous avez observé dans vos analyses. Quels sont les éléments les plus pertinents que vous retenez ? -\>
 
 Grocery : Il y a un cycle de fréquentation hebdomadaire et une tendance globalement à la hausse. Lorsque l'on regarde séparemment les jours de la semaine et les week-ends, il ne semble pas y avoir de cycle significatif de fréquentation des épiceries et pharamcies. On observe cependant une grosse baisse de fréquentation au moment du lockdown, et une phase assez plate dans les deux cas pendant cette période, puis la fréquentaton pour la semaine comme pour les week-ends remontent petit à petit.
+
+Work : En résumé, l’analyse de la fréquentation des lieux de travail en Wallonie montre un effondrement brutal de plus de 60 % au moment du premier confinement, suivi d’une remontée progressive qui reste toutefois nettement inférieure au niveau de référence pendant toute la période 2020–2021. Les ACF journalière et hebdomadaire confirment une forte dépendance temporelle et une série clairement non stationnaire, avec une saisonnalité surtout hebdomadaire. La décomposition LOESS de la série hebdomadaire met en évidence une tendance croissante mais toujours négative, ainsi qu’une composante saisonnière de faible amplitude par rapport au choc global. L’impact de la COVID-19 sur les déplacements vers les lieux de travail apparaît donc durable, même après la phase de confinement strict, la mobilité professionnelle ne revient pas totalement à la normale, ce qui suggère un maintien important du télétravail et une réduction persistante des déplacements domicile-travail.
 
 Retail : On peut voir une augmentation au long terme à la hausse pour la fréquentation des zones de vente au détail et des loisirs. On peut cependant toujours voir des fluctuations dû aux jours de fermetures. On inintéressant séparément au jours de la semaine et au weekend, il y a une différences dans la série brute mais pas dans la tendance générale ou même dans les résidus.
 
