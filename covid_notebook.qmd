@@ -578,7 +578,7 @@ La série brute représente la fréquentation des zones résidentielles, qui a e
 
 Pour la composante filtered, on observe trois "bosses" majeures qui correspondent aux vagues successives de restrictions sanitaires. Contrairement aux données de vente, cette tendance reste toujours positive (au-dessus de 0), confirmant que les gens passent globalement plus de temps chez eux qu'avant la crise.
 
-Les résidus isolent le "bruit" et les évènements atypiques une fois que la tendance et la saisonnalité ont été lissées. L'amplitude des barres est relativement stable, mais on remarque plusieurs pics verticaux isolés (vers le haut et le bas). Ces anomalies ponctuelles peuvent correspondre à des jours fériés spécifiques ou à des événements météorologiques extrêmes qui ont brusquement modifié la présence des gens à domicile par rapport à une semaine normale.
+Les résidus montrent une amplitude des barres relativement stable, mais on remarque plusieurs pics verticaux isolés. Ces anomalies ponctuelles peuvent correspondre à des jours fériés spécifiques ou à des événements météorologiques extrêmes qui ont brusquement modifié la présence des gens à domicile par rapport à une semaine normale.
 
 \<!--% Lorsque toutes les analyses sont réalisées, terminez ce bloc-notes avec 3 à 6 phrases de conclusion en rapport avec ce que vous avez observé dans vos analyses. Quels sont les éléments les plus pertinents que vous retenez ? -\>
 
