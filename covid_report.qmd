@@ -37,7 +37,7 @@ L’analyse est réalisée dans la [SciViews Box 2025](https://www.sciviews.org/
 
 <!--% Présentez les analyses les plus pertinents que vous avez sélectionnés. Structurez la section en partie avec des titres explicites de niveau trois.-->
 
-### Influence sur les épiceries et pharmacies 
+### Influence sur les épiceries et pharmacies
 
 ```{r}
 plot(grocery_decomp_loess, col = 1:3)
@@ -113,8 +113,8 @@ En regardant les résidus, on peut voir de très nombreux pics, avec des valeurs
 ```{r fréquentation résidentielle brute}
 plot(resid_ts1, main ="Fréquentation des lieux de vente au détail et loisirs ", ylab = "% par rapport à la valeur de référence")
 ```
-Contrairement à la fréquentation des points de ventes, la fréquentation des zones résidentielles a fortement augmenté suite au confinement de la population ce qui est logique, avec un pic allant jusque 30% de fréquentation supplémentaire par rapport à la période pré covid. 
-On remarque cependant que même après la levé du confinement les personnes on eu tendance à rester chez eux malgré tout. On ne voit que de rare pics où cette fréquentation a été moins importante qu'avant la pandémie.
+
+Contrairement à la fréquentation des points de ventes, la fréquentation des zones résidentielles a fortement augmenté suite au confinement de la population ce qui est logique, avec un pic allant jusque 30% de fréquentation supplémentaire par rapport à la période pré covid. On remarque cependant que même après la levé du confinement les personnes on eu tendance à rester chez eux malgré tout. On ne voit que de rare pics où cette fréquentation a été moins importante qu'avant la pandémie.
 
 ```{r Décomposition de retail}
 plot(resid_tsd, col = 1:3, main = "Décomposition de la fréquentation des zones résidentielles")
