@@ -1,5 +1,5 @@
 ---
-title: "Travail d'analyse: Les effets du confinement durant le covid sur divers paramètres sociaux et économiques."
+title: "Les effets du confinement de la pandémie de Covid19 sur divers paramètres sociaux et économiques : Notebook."
 author: "Achille Dekkers, Maxime Pourtois, Oguzhan Dogru, Tanguy Deprez "
 format:
   html:
