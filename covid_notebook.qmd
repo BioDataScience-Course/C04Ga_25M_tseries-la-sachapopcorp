@@ -139,11 +139,13 @@ plot(residential_ts_trend, main = "Fréquentation des zones résidentielles")
 
 Partie Achille (parks et transit) :
 
-### Fréquentation des parcs pendant le covid :
+### Analyse de la fréquentation des parcs. (Achille)
+
 
 ```{r}
 parks <- ts(feur$parks)
 
+library(zoo)
 dates <- seq(as.Date("2020-02-15"), by = "day", length.out = length(parks))
 z <- zoo(parks, dates)
 plot(z, type = "l", xlab = "Dates", ylab = "Variation de la fréquentation des parcs")
@@ -185,6 +187,9 @@ plot(parkstsd, col = 1:3)
 
 Cette analyse met en évidence le cycle annuel. On constate ici que le premier cycle est moins écrasé que les deux suivants. On peut sans doute en conclure qu'une diminution de la fréquentation des parcs est survenue après le premier confinement, comme le suggérait notre première analyse.
 
+### Analyse de la fréquentation des stations de transports en commun. (Achille)
+
+
 ```{r}
 transit <- ts(feur$transit)
 
@@ -218,7 +223,7 @@ spectrum(transitts[,"filtered"], spans = c(3,5))
 
 L'analyse montre un creux très marqué au moment du premier confinement.
 
-## Analyse de la fréquentation des épiceries et pharmacies (Maxime)
+### Analyse de la fréquentation des épiceries et pharmacies (Maxime)
 
 ```{r grocery ts}
 plot(grocery_ts)
