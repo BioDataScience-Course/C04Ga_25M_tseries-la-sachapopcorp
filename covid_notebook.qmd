@@ -589,3 +589,7 @@ Les résidus montrent une amplitude des barres relativement stable, mais on rema
 \<!--% Lorsque toutes les analyses sont réalisées, terminez ce bloc-notes avec 3 à 6 phrases de conclusion en rapport avec ce que vous avez observé dans vos analyses. Quels sont les éléments les plus pertinents que vous retenez ? -\>
 
 Grocery : Il y a un cycle de fréquentation hebdomadaire et une tendance globalement à la hausse. Lorsque l'on regarde séparemment les jours de la semaine et les week-ends, il ne semble pas y avoir de cycle significatif de fréquentation des épiceries et pharamcies. On observe cependant une grosse baisse de fréquentation au moment du lockdown, et une phase assez plate dans les deux cas pendant cette période, puis la fréquentaton pour la semaine comme pour les week-ends remontent petit à petit.
+
+Retail : On peut voir une augmentation au long terme à la hausse pour la fréquentation des zones de vente au détail et des loisirs. On peut cependant toujours voir des fluctuations dû aux jours de fermetures. On inintéressant séparément au jours de la semaine et au weekend, il y a une différences dans la série brute mais pas dans la tendance générale ou même dans les résidus.
+
+Residential : Lorsqu'on regarde la fréquentation des zones résidentielles on observe une très forte augmentation provoqué par le confinement généralisé de la  population, mais au long terme l'habitude du confinement semble être resté dans les habitudes de la population.
