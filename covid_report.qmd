@@ -37,13 +37,33 @@ L’analyse est réalisée dans la [SciViews Box 2025](https://www.sciviews.org/
 
 <!--% Présentez les analyses les plus pertinents que vous avez sélectionnés. Structurez la section en partie avec des titres explicites de niveau trois.-->
 
-###Influence- sur le monde du travail
+### Influence sur les épiceries et pharmacies
+
+```{r}
+plot(grocery_decomp_loess, col = 1:3)
+spectrum(grocery_loess[, "seasonal"], spans = c(5, 7))
+```
+
+```{r}
+spectrum(grocery_tswd2, spans = c(3, 5))
+grocery_decomp_loess2 <- tsd(grocery_tswd2, method = "average", order = 26)
+plot(grocery_decomp_loess2, col = 1:3)
+```
+
+```{r}
+acf(grocery_tswk2)
+plot(trend.test(grocery_tswk2, R = 999))
+grocery_decomp_loess3 <- tsd(grocery_tswk2, method = "average", order = 26)
+plot(grocery_decomp_loess2, col = 1:3)
+```
+
+### Influence sur le monde du travail
 
 ```{r}
 plot(workweek2, main = "Fréquentation hebdomadaire des lieux de travail", ylab = "% par rapport à la base", xlab = "")
 ```
 
-La chute drastique de la fréquentation des lieux de travail peut se voir sur ce graphique, avec le début du confinement qui mène ce paramètre au point le plus bas du temps considéré. 
+La chute drastique de la fréquentation des lieux de travail peut se voir sur ce graphique, avec le début du confinement qui mène ce paramètre au point le plus bas du temps considéré.
 
 ```{r}
 spectrum(workweek, spans = c(3,5), main = "Spectre - série hebdomadaire")
@@ -64,7 +84,47 @@ plot(workweek_loess, main = "Décomposition - lieux de travail (hebdom.)")
 
 En décomposant la série temporelle, on peut effectivement voir une tendance de la fréquentation du milieu de travail à remonter. Cela semble logique car la société commence à reprendre son cours malgré la pandémie mais on voit aussi que le niveau de fréquentation initial n'est pas rétabli dans le laps de temps. On voit aussi une certaine saisonnalité dans un motif qui semble se répéter annuellement.
 
+### Influence sur les zones de vente au détail et des loisirs
 
+```{r série brute de retail}
+plot(retail_ts1, main = "Fréquentation des lieux de vente au détail et loisirs ", ylab = "% par rapport à la valeur de référence")
+```
+
+Cette série temporelle illustre l'impact des restrictions sanitaires sur la fréquentation des lieux de vente au détail et des loisirs entre 2020 et 2022. On y observe une trajectoire en "W" avec une première chute brutale de -80% lors du premier confinement, suivie d'une reprise éphémère, puis d'une seconde baisse plus étalée durant les vagues hivernales de 2020-2021. La période finale marque un retour à la normale, voire un dépassement de la valeur de référence. L'analyse révèle également ce qui semble être un cycle hebdomadaire couplée à des chocs ponctuels négatifs qui reflètent l'arrêt de l'activité lors des jours fériés.
+
+```{r tendance générale bootstrap retail}
+set.seed(144946)
+retail_trend <- trend.test(retail_ts1, R = 999)
+plot(retail_trend, main = "Test de tendance-Fréquentation des lieux de vente au détail et loisirs")
+```
+
+D'après cette histogramme, que la p-value semble bien inférieur à la valeur seuil de 0.05 avec une valeur proche de 0. Nous rejetons H0 et on peut en conclure qu’une tendance générale significative au seuil α existe dans la série.
+
+```{r Décompostion de retail}
+plot(retail_tsd, main = "Décomposition de la fréquentation des zones de vente au détail et loisirs", col = 1:3)
+```
+
+En décomposant la série par moyenne mobile on peut voir que le filtrage reprend la tendance générale de baisse de fréquentation et la reprise dû aux différentes décisions gouvernementale face à la situation sanitaire.
+
+En regardant les résidus, on peut voir de très nombreux pics, avec des valeurs extrêmes négatives qui peuvent s'expliquer par la fermeture les magasins de vente au détail et loisirs mais pas uniquement à cause de la pandémie. Les résidus semblent en parti suivre le calendrier avec des baisses de fréquentation possible le dimanche ou les jours fériés de par leur fermeture mais aussi l'évolution du pouvoir d'achat pour les zones de vente au détail.
+
+### Impact sur la fréquentation des zones résidentielles
+
+```{r fréquentation résidentielle brute}
+plot(resid_ts1, main ="Fréquentation des lieux de vente au détail et loisirs ", ylab = "% par rapport à la valeur de référence")
+```
+
+Contrairement à la fréquentation des points de ventes, la fréquentation des zones résidentielles a fortement augmenté suite au confinement de la population ce qui est logique, avec un pic allant jusque 30% de fréquentation supplémentaire par rapport à la période pré covid. On remarque cependant que même après la levé du confinement les personnes on eu tendance à rester chez eux malgré tout. On ne voit que de rare pics où cette fréquentation a été moins importante qu'avant la pandémie.
+
+```{r Décomposition de retail}
+plot(resid_tsd, col = 1:3, main = "Décomposition de la fréquentation des zones résidentielles")
+```
+
+En s'intéressant à la composante filtered, on observe trois "bosses" majeures qui correspondent aux vagues successives de restrictions sanitaires. Contrairement aux données de vente, cette tendance reste toujours positive, confirmant que les gens passent globalement plus de temps chez eux qu'avant la crise.
+
+Les résidus montrent une amplitude des barres relativement stable tout au long, mais on remarque plusieurs pics isolés. Ces anomalies ponctuelles peuvent correspondre à des jours fériés spécifiques ou à des événements météorologiques extrêmes qui ont brusquement modifié la présence des gens à domicile par rapport à une semaine normale.
+
+La persistance d'une tendance positive dans la composante lissée confirme que la pandémie a durablement ancré le domicile comme centre de gravité, via la généralisation du télétravail et des loisirs domestiques. Ces "bosses" successives témoignent ainsi d'une adaptation comportementale profonde de la population, qui s'ajuste en temps réel au rythme des vagues sanitaires et des restrictions associées.
 
 ## Discussion et Conclusion
 
