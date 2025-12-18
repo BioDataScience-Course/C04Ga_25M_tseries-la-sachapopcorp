@@ -23,7 +23,7 @@ Tout au long de l'année, la fréquentation de certains lieux varie selon les p�
 
 <!--% Rédigez le but de ce rapport.-->
 
-Ce rapport va essayer de mettre en évidence les effets de la Covid19 sur tout un aspect du fonctionnement de la société, d'un point de vue économique comme social.
+Ce rapport vise à mettre en évidence les effets de la Covid19 sur tout un aspect du fonctionnement de la société, d'un point de vue économique comme social.
 
 ## Matériel et méthodes
 
@@ -145,6 +145,68 @@ Les résidus montrent une amplitude des barres relativement stable tout au long,
 
 La persistance d'une tendance positive dans la composante lissée confirme que la pandémie a durablement ancré le domicile comme centre de gravité, via la généralisation du télétravail et des loisirs domestiques. Ces "bosses" successives témoignent ainsi d'une adaptation comportementale profonde de la population, qui s'ajuste en temps réel au rythme des vagues sanitaires et des restrictions associées.
 
+### Influence sur la fréquentation des parcs
+
+```{r}
+parks <- ts(feur$parks)
+
+library(zoo)
+dates <- seq(as.Date("2020-02-15"), by = "day", length.out = length(parks))
+z <- zoo(parks, dates)
+plot(z, type = "l", xlab = "Dates", ylab = "Variation de la fréquentation des parcs")
+abline(v = as.Date("2020-03-18"), col = "2", lty = 3)
+abline(v = as.Date("2020-05-04"), col = "3", lty = 3)
+abline(v = as.Date("2020-10-20"), col = "2", lty = 3)
+abline(v = as.Date("2021-02-01"), col = "3", lty = 3)
+```
+
+En rouge : début de confinement En vert : fin de confinement
+
+Cette analyse met en évidence la diminution drastique de la fréquentation des parcs au moment du premier confinement. Après les 2 confinements, on constate une augmentation progressive de la fréquentation. Cela dit, il s'agit très probablement d'une augmentation due à l'arrivée des températures plus douce du printemps et de l'été, comme le montre l'analyse suivante.
+
+```{r}
+spectrum(parkstsclean, spans = c(3,5))
+```
+
+De plus, on peut constater une tendance à la hausse très marquée et qui finalement arrive à un plateau. Cette tendance est due au creux du premier confinement et à l'augmentation qui a suivi le premier confinement alors que les températures augmentaient, comme le suggère l'analyse suivante.
+
+```{r}
+parkstsd <- tsd(parkstsclean, method = "loess", s.window = 13, trend = TRUE)
+plot(parkstsd, col = 1:3)
+```
+
+On peut conclure que les parcs ont subit une diminution drastique au moment du premier confinement. Cependant, le second confinement ne semble pas être accompagné d'une diminution de la fréquentation des parcs, ce qui peut être du à 2 facteurs principaux : les températures froides de novembre-décembre et des restrictions plus laxistes durant le second confinement.
+
+### Influence sur la fréquentation des stations de transports en commun
+
+```{r}
+transit <- ts(feur$transit)
+
+dates <- seq(as.Date("2020-02-15"), by = "day", length.out = length(transit))
+z <- zoo(transit, dates)
+plot(z, type = "l", xlab = "Dates", ylab = "Variation de la fréquentation des stations de transport en commun")
+abline(v = as.Date("2020-03-18"), col = "2", lty = 3)
+abline(v = as.Date("2020-05-04"), col = "3", lty = 3)
+abline(v = as.Date("2020-10-20"), col = "2", lty = 3)
+abline(v = as.Date("2021-02-01"), col = "3", lty = 3)
+```
+
+Dans cette analyse, on constate encore une fois un creux drastique au moment du premier confinement et un autre nettement moins important au moment du second.
+
+```{r}
+transitsd <- tsd(transit, method = "average", order = 15, time = 3)
+plot(transitsd, col = 1:3)
+transitts<- tseries(transitsd)
+spectrum(transitts[,"filtered"], spans = c(3,5))
+```
+
+Cette seconde analyse met en évidence ce premier creux. De plus, l'analyse spectrale montre un cycle hebdomadaire non significatif mais qui nous indique qu'il s'agirait d'une corrélation avec les jours de travail. Dans cette analyse, on voit aussi un cycle annuel très marqué mais qui semble moins explicatif que dans d'autres analyses.
+
+On peut conclure de cette analyse que le creux du premier confinement correspondait à une volonté d'endiguer le virus avec une fermeture complète des stations de transport en commun. le second confinement, quant à lui explicatif d'une volonté d'endiguer le virus tout en continuant à garder l'économie à flot en permettant au gens de continuers à travailler.
+
 ## Discussion et Conclusion
 
 <!--% En tenant compte du but de votre carnet de notes et de vos résultats, discutez de résultats et proposez des conclusions à votre analyse en 5 à 10 phrases. -->
+
+
+En conclusion, le premier confinement était une volonté de freiner la progression du virus au détriment de l'économie. En effet, le covid a provoqué la plus grande crise économique que l'humanité ait connue. Le premier confinement aurait permis une progression de la recherche pour un remède contre le covid dans un intervalle de temps le plus petit possible. Cependant, avec l'apparition de nouveaux variants accompagnée d'une virulence accrue, le résultats en fut tout autre : une économie qui s'est écroulée mais un virus toujours aussi présent. Pour cette raison, au lieu de rétablir un confinement très strict et court, le gouvernement misera plûtot sur un confinement moins ferme mais de plus longue durée pour ralentir la progression du virus tout en favorisant la recherche et l'économie. 
