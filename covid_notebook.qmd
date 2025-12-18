@@ -266,7 +266,7 @@ Partie Oguzhan
 
 Je vais me concentrer sur workplace
 
-```{r}
+```{r, Oguz début}
 #Je me limite personnellement de fevrier à fin 2021 comme dit dans le read.me, car moins affecté après.
 feur_OD<-  sfilter(feur, date >= as.Date("2020-02-15"),  date <= as.Date("2021-12-31"))
 
@@ -295,7 +295,7 @@ L'histogramme du trend test confirme la significativité de la tendance.
 
 Passons maintenant à l'hebdomadaire.
 
-```{r}
+```{r, Oguz decom semaine }
 feurw <- feur_OD
 feurw$weekday <- weekdays(as.POSIXct(feurw$date))
 
@@ -310,7 +310,7 @@ plot(workweek)
 
 On voit très clairement une chute supérieure à 60% de la fréquentation des lieux de travail au début puis une remontée qui ne revient jamais vraiment au point de départ.
 
-```{r}
+```{r, Oguz test sem work}
 par(mfrow = c(2,2), mar = c(3,3,2,1))
 
 plot(workweek, main = "Fréquentation hebdomadaire des lieux de travail", ylab = "% par rapport à la base", xlab = "")
@@ -328,7 +328,7 @@ Les tendances persistent à l'échelle hebdomaire.
 
 Décomposons maintenant la série hebdomadaire, elle semble plus propre que la journalière.
 
-```{r}
+```{r, Oguz test }
 #Vu la gueule des courbes, je vais faire une LOESS, en espérant que ça va gérer les petits effets de bords en même temps.
 #workweek_loess <- tsd(workweek, method = "loess", s.window = 53, trend = TRUE) j'ai essayé mais il dit que la période totale est trop courte :((( je vais donc reprendre sans la coupure que j'ai fait au tout début de mon analyse
 feur_OD2 <- sfilter(feur, date >= as.Date("2020-02-15"))
