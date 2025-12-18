@@ -227,6 +227,7 @@ plot(grocery_ts)
 Je reprends l'analyse faite plus haut :
 
 ```{r grocery acf spectrum}
+set.seed(9037)
 par(mfrow = c(2,3), mar =c(3,3,3,3))
 acf(grocery_ts)
 spectrum(grocery_ts, spans = c(3, 5), main = "Fréquentation des épiceries et pharmacies")
@@ -256,7 +257,7 @@ grocery_loess <- tseries(grocery_decomp_loess)
 spectrum(grocery_loess[, "seasonal"], spans = c(5, 7))
 ```
 
-On observe un cycle significatif hebdomadaire, on peut maintenant s'intéréser à la différence entre les jours de la semaine et ceux du week-end, afin de savoir s'il existe une différence dans les fréquentations.
+On observe un cycle significatif hebdomadaire, on peut maintenant s'intéréser à la différence entre les jours de la semaine et ceux du week-end, afin de savoir s'il existe une différence dans les fréquentations. Il y a également un cycle à 1 environ, ce qui correspond à une cycle annuel.
 
 ```{r grocery weekdays}
 # Calcul des jours de la semaine
@@ -277,6 +278,7 @@ plot(grocery_tswd2, main = "Série des jours de la semaine - Fréquentation des 
 Nous pouvons voir sur le premier graphe que les jours de week-ends ont été retirés. Le deuxième graphe représente donc uniquement les jours de la semaine "aggrégés" pour une meilleure représentation et une analyse plus fine.
 
 ```{r grocery weekdays acf}
+set.seed(12373456)
 acf(grocery_tswd2)
 plot(trend.test(grocery_tswd2, R = 999))
 ```
@@ -287,7 +289,7 @@ L'autocorrélation est toujours bien présente, de plus que la tendance généra
 spectrum(grocery_tswd2, spans = c(3, 5))
 ```
 
-La série ne semble pas contenir de cycle significatif une fois les jours de week-ends enlevés.
+La série ne semble pas contenir de cycle significatif une fois les jours de week-ends enlevés (même sur la série filtrée, j'ai essayé cela donne a peu près le même graphique.
 
 ```{r grocery loess weekdays}
 grocery_decomp_loess2 <- tsd(grocery_tswd2, method = "average", order = 26)
@@ -501,8 +503,6 @@ plot(retailw_ts2, main = "Série des jours de la semaine - Fréquentation des li
 
 En isolant les jours de la semaine du weekend, on observe que la fréquentation suit une trajectoire de reprise plus hachée que la tendance globale, marquée par une chute brutale à près de -80% lors du choc initial suivie de plusieurs rechutes significatives entre fin 2020 et début 2021. Cette approche permet de confirmer que l'activité "de routine" a fini par se stabiliser au-dessus de son niveau de référence à partir de la mi-2021, tout en révélant que les jours ouvrés restent sujets à des variations plus nettes que la tendance générale lissée
 
-
-
 ```{r analyse série avec uniquement les jours de la semaine}
 acf(retailw_ts2)
 spectrum(retailw_ts2, spans = c(3,5))
@@ -592,4 +592,4 @@ Grocery : Il y a un cycle de fréquentation hebdomadaire et une tendance globale
 
 Retail : On peut voir une augmentation au long terme à la hausse pour la fréquentation des zones de vente au détail et des loisirs. On peut cependant toujours voir des fluctuations dû aux jours de fermetures. On inintéressant séparément au jours de la semaine et au weekend, il y a une différences dans la série brute mais pas dans la tendance générale ou même dans les résidus.
 
-Residential : Lorsqu'on regarde la fréquentation des zones résidentielles on observe une très forte augmentation provoqué par le confinement généralisé de la  population, mais au long terme l'habitude du confinement semble être resté dans les habitudes de la population.
+Residential : Lorsqu'on regarde la fréquentation des zones résidentielles on observe une très forte augmentation provoqué par le confinement généralisé de la population, mais au long terme l'habitude du confinement semble être resté dans les habitudes de la population.
