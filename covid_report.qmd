@@ -1,5 +1,5 @@
 ---
-title: "Effets de l'épidémie de Covid19 sur les fréquentations de divers "
+title: "Les efftes du confinement de la pandémie de Covid 19 sur divers paramètres sociaux et économiques : Report."
 author: "Achille Dekkers, Maxime Pourtois, Oguzhan Dogru, Tanguy Deprez"
 format:
   pdf:
