@@ -78,7 +78,6 @@ retail_trend <- trend.test(retail_ts1, R = 999)
 plot(retail_trend, main = "Test de tendance-Fréquentation des lieux de vente au détail et loisirs")
 ```
 
-
 ## Discussion et Conclusion
 
 <!--% En tenant compte du but de votre carnet de notes et de vos résultats, discutez de résultats et proposez des conclusions à votre analyse en 5 à 10 phrases. -->
