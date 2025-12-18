@@ -90,7 +90,6 @@ En décomposant la série par moyenne mobile on peut voir que le filtrage repren
 
 En regardant les résidus, on peut voir de très nombreux pics, avec des valeurs extrêmes négatives qui peuvent s'expliquer par la fermeture les magasins de vente au détail et loisirs mais pas uniquement à cause de la pandémie. Les résidus semblent en parti suivre le calendrier avec des baisses de fréquention possible le dimanche ou les jours fériés de par leur fermeture mais aussi l'évolution du pouvoir d'achat pour les zones de vente au détail.
 
-<<<<<<< HEAD
 ### Impact sur la fréquentation des zones résidentielles
 
 ```{r fréquentation résidentielle brute}
@@ -109,8 +108,6 @@ Les résidus montrent une amplitude des barres relativement stable tout au long,
 
 La persistance d'une tendance positive dans la composante lissée confirme que la pandémie a durablement ancré le domicile comme centre de gravité, via la généralisation du télétravail et des loisirs domestiques. Ces "bosses" successives témoignent ainsi d'une adaptation comportementale profonde de la population, qui s'ajuste en temps réel au rythme des vagues sanitaires et des restrictions associées.
 
-=======
->>>>>>> bcb285ca9cfd8a9d238a03e894dc983ae5970579
 ## Discussion et Conclusion
 
 <!--% En tenant compte du but de votre carnet de notes et de vos résultats, discutez de résultats et proposez des conclusions à votre analyse en 5 à 10 phrases. -->

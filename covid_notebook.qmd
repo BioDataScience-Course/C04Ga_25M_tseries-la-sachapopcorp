@@ -489,13 +489,19 @@ feur_datew$weekdays <- weekdays(as.POSIXct(feur_datew$date))
 # Les données du week-end sont remplacées par des valeurs manquantes
 feur_datew[feur_datew$weekdays == "Saturday" | feur_datew$weekdays == "Sunday" , 2:7] <- NA 
 # La série temporelle est créée (début le 15 février 2020 = 46e jour de l'année 2020)
-retailw_ts <- ts(feur_datew$retail, start = c(2021, 46), frequency = 365)
+retailw_ts <- ts(feur_datew$retail, start = c(2020, 46), frequency = 365)
 #plot(retailw_ts)
 # Aggrégation par moyenne des valeurs par semaine
 retailw_ts2 <- aggregate(retailw_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
-#plot(retailw_ts2, main = "Série des jours de la semaine - Fréquentation des lieux de vente au détail et loisirs")
+plot(retailw_ts2, main = "Série des jours de la semaine - Fréquentation des lieux de vente au détail et loisirs")
 
 ```
+
+
+
+En isolant les jours de la semaine du weekend, on observe que la fréquentation suit une trajectoire de reprise plus hachée que la tendance globale, marquée par une chute brutale à près de -80% lors du choc initial suivie de plusieurs rechutes significatives entre fin 2020 et début 2021. Cette approche permet de confirmer que l'activité "de routine" a fini par se stabiliser au-dessus de son niveau de référence à partir de la mi-2021, tout en révélant que les jours ouvrés restent sujets à des variations plus nettes que la tendance générale lissée
+
+
 
 ```{r analyse série avec uniquement les jours de la semaine}
 acf(retailw_ts2)
@@ -534,9 +540,11 @@ feur_datewk[feur_datewk$weekdays == c("Monday") |feur_datewk$weekdays == c("Tues
 retailwk_ts <- ts(feur_datewk$retail, start = c(2020, 46), frequency = 365)
 #plot(retailwk_ts)
 # Aggrégation par moyenne des valeurs par semaine
-retailwk_ts2 <- aggregate(retailw_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
-#plot(retailwk_ts2,  main = "Série weekend - Fréquentation des lieux de vente au détail et loisirs")
+retailwk_ts2 <- aggregate(retailwk_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(retailwk_ts2,  main = "Série weekend - Fréquentation des lieux de vente au détail et loisirs")
 ```
+
+La série ne reprenant que les week-ends montre une chute initiale extrêmement brutale, atteignant environ -85 % début 2020, suivie d'une reprise très instable et marquée par de fortes rechutes jusqu'à la mi-2021. Contrairement aux jours de la semaine, la fréquentation des week-ends affiche une irrégularité beaucoup plus élevée, avec des pics dépassant les +30 % fin 2022 et un retour au niveau de référence nettement plus vigoureux. En la fin d'année 2021, on remarque une forte chute sans doute provoquer par les fêtes de fin d'année. En résumé, l'activité de week-end a retrouvé une dynamique de croissance plus forte que celle de la semaine, bien qu'elle reste ponctuée de changements soudains et importants.
 
 ```{r analyse série weekend}
 acf(retailwk_ts2)
@@ -546,7 +554,7 @@ retailwk_trend <- trend.test(retailwk_ts2, R = 999)
 plot(retailwk_trend)
 ```
 
-L'ACF montre une diminution très lente et régulière, ce qui prouve que les données ne sont pas aléatoires. Cela signifie que la fréquentation d'un week-end est fortement influencée par celle des semaines précédentes, confirmant l'existence d'une tendance de fond persistante.
+L'ACF montre une diminution très lente et régulière, ce qui prouve que les données ne sont pas aléatoires. Cela signifie que la fréquentation d'un week-end est fortement influencée par celle des weekend précédents, confirmant l'existence d'une tendance de fond persistante.
 
 Pour le périodigramme lissé, on observe un pic important situé à gauche du graphique indique que les variations à cycle lent (la tendance de long terme) sont beaucoup plus puissantes que les fluctuations rapides.
 
@@ -556,8 +564,6 @@ L'histogramme bien centré et l'alignement presque parfait des points sur la dro
 retailwk_loess <- tsd(retailwk_ts2, method = "average", order = 26)
 plot(retailwk_loess, col = 1:4, main = "Fréquentation des lieux de vente au détail et loisirs durant le weekend")
 ```
-
-La série ne reprenant que les week-ends montre une chute initiale extrêmement brutale, atteignant environ -85 % début 2020, suivie d'une reprise très instable et marquée par de fortes rechutes jusqu'à la mi-2021. Contrairement aux jours de la semaine, la fréquentation des week-ends affiche une irrégularité beaucoup plus élevée, avec des pics dépassant les +30 % fin 2022 et un retour au niveau de référence nettement plus vigoureux. En résumé, l'activité de week-end a retrouvé une dynamique de croissance plus forte que celle de la semaine, bien qu'elle reste ponctuée de changements soudains et importants.
 
 la fréquentation durant les weekends montre une reprise progressive et quasi linéaire après le choc initial de 2020, illustrant une normalisation constante des comportements de consommation et de loisirs sur deux ans. Le fait que la pente soit positive et régulière indique que la dynamique de retour dans les commerces est structurelle et ne dépend pas seulement d'effets de mode passagers.
 
