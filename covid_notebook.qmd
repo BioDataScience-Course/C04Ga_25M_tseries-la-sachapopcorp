@@ -260,18 +260,69 @@ On observe un cycle significatif hebdomadaire, on peut maintenant s'intéréser 
 
 ```{r}
 # Calcul des jours de la semaine
+feur_date<-sfilter(feur, date >= as.Date("2020-02-15"),  date <= as.Date("2021-12-31"))
+feur_datewd <- feur_date
+feur_datewd$weekdays <- weekdays(as.POSIXct(feur_datewd$date))
+# Les données du week-end sont remplacées par des valeurs manquantes
+feur_datewd[feur_datewd$weekdays == "Saturday" | feur_datewd$weekdays == "Sunday" , 2:7] <- NA 
+# La série temporelle est créée (début le 15 février 2020 = 46e jour de l'année 2020)
+grocery_tswd <- ts(feur_datewd$grocery, start = c(2021, 46), frequency = 365)
+plot(grocery_tswd)
+# Aggrégation par moyenne des valeurs par semaine
+grocery_tswd2 <- aggregate(grocery_tswd, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(grocery_tswd2, main = "Série des jours de la semaine - Fréquentation des épiceries et pharmacies")
+
+```
+
+Nous pouvons voir sur le premier graphe que les jours de week-ends ont été retirés. Le deuxième graphe représente donc uniquement les jours de la semaine "aggrégés" pour une meilleure représentation et une analyse plus fine.
+
+```{r}
+acf(grocery_tswd2)
+plot(trend.test(grocery_tswd2, R = 999))
+```
+
+L'autocorrélation est toujours bien présente, de plus que la tendance générale.
+
+```{r}
+spectrum(grocery_tswd2, spans = c(3, 5))
+```
+
+La série ne semble pas contenir de cycle significatif une fois les jours de week-ends enlevés.
+
+```{r}
+grocery_decomp_loess2 <- tsd(grocery_tswd2, method = "average", order = 26)
+plot(grocery_decomp_loess2, col = 1:3)
+```
+
+Cependant la tendance générale est toujours bien visible, on remarque qu'elle est présente surtout après le premier tier de la série, ce qui correspond plus ou moins à la fin de la pandémie et la reprise normale des activités. La pandémie de Covid19 semble avoir eu un impact important, en semaine, sur la fréquentation des épiceries et pharmacies. On peut d'ailleurs bien observé sur la série non filtrée la chut de fréquentation au moment du confinement.
+
+Essayons de voir pour les week-ends maintenant.
+
+```{r}
 feur_datewk <- feur_date
 feur_datewk$weekdays <- weekdays(as.POSIXct(feur_datewk$date))
 # Les données du week-end sont remplacées par des valeurs manquantes
-feur_datewk[feur_datewk$weekdays == "Saturday" | feur_datewk$weekdays == "Sunday" , 2:7] <- NA 
-# La série temporelle est créée (début le 15 février 2020 = 46e jour de l'année 2020)
-grocery_ts <- ts(feur_datewk$grocery, start = c(2021, 46), frequency = 365)
-plot(grocery_ts)
-# Aggrégation par moyenne des valeurs par semaine
-grocery_ts2 <- aggregate(grocery_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
-plot(grocery_ts2, main = "Série des jours de la semaine - Fréquentation des épiceries et pharmacies")
+feur_datewk[feur_datewk$weekdays == c("Monday") |feur_datewk$weekdays == c("Tuesday") |feur_datewk$weekdays == c("Wednesday") |feur_datewk$weekdays == c("Thursday") |feur_datewk$weekdays == c("Friday") , 2:7] <- NA 
+grocery_tswk <- ts(feur_datewk$grocery, start = c(2020, 46), frequency = 365)
+plot(grocery_tswk)
 
+grocery_tswk2 <- aggregate(grocery_tswk, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(grocery_tswk2,  main = "Série weekend - Fréquentation des lieux de vente au détail et loisirs")
 ```
+
+```{r}
+acf(grocery_tswk2)
+plot(trend.test(grocery_tswk2, R = 999))
+```
+
+Toujours OK pour la tendance.
+
+```{r}
+grocery_decomp_loess3 <- tsd(grocery_tswk2, method = "average", order = 26)
+plot(grocery_decomp_loess2, col = 1:3)
+```
+
+Les analyses sont sensiblement similaires à l'analyse faite sur les jours de la semaine. Il ne semble donc pas y avoir de différences de fréquentations entre la semaine et le week-end. Bien qu'un cycle soit initialement présent au niveau hebdomadaire.
 
 Partie Oguzhan
 
@@ -382,8 +433,8 @@ plot(retail_ts1, main = "Fréquentation des lieux de vente au détail et loisirs
 acf(retail_ts1)
 spectrum(retail_ts1, spans = c(3, 5))
 ```
-Sur le premier graphique, la série brute, on peut voir que qu'il n'y a pas de différence avec les valeurs de références au début de la série, mais la série est suivit d'une chute brutale de la fréquentation avec -80% au printemps, en raison du premier confinement.
-Ensuite il y a une augmentation des fréquentation jusqu'à la fin de confinement, et on peut observer une seconde baisse à la fin de l'année 2020 en raison de la recrudescence des cas de covid-19 qui engendre un second confinement un peu moins stricte. enfin il y a à nouveau un augmentation avec certaines valeurs extrême. On remarque malgré ses variations dominantes des réductions ponctuelles qui peut être dû par exemple aux jours fériés
+
+Sur le premier graphique, la série brute, on peut voir que qu'il n'y a pas de différence avec les valeurs de références au début de la série, mais la série est suivit d'une chute brutale de la fréquentation avec -80% au printemps, en raison du premier confinement. Ensuite il y a une augmentation des fréquentation jusqu'à la fin de confinement, et on peut observer une seconde baisse à la fin de l'année 2020 en raison de la recrudescence des cas de covid-19 qui engendre un second confinement un peu moins stricte. enfin il y a à nouveau un augmentation avec certaines valeurs extrême. On remarque malgré ses variations dominantes des réductions ponctuelles qui peut être dû par exemple aux jours fériés
 
 Sur Le graphique de l'ACF, on voit une décroissance assez lente. Cela signifie que la fréquentation d'un jour est fortement corrélée avec la fréquentation de nombreux jours précédents.
 
@@ -398,11 +449,11 @@ retail_trend$p.value
 
 En faisant une analyse de la tendance générale en utilisant la méthode bootstrap, on remarque que notre histogramme se trouve à gauche de la valeur t bootstrappée. Cela signifie que p est inférieur à α, nous rejetons donc H0 et concluons qu’une tendance générale significative au seuil α existe dans la série.
 
-
 ```{r analyse série avec average}
 retail_tsd <- tsd(retail_ts1, method = "average", order = 3)
 plot(retail_tsd, col = 1:3, main = "Décomposotion moyenne mobile-Fréquentation des lieux de vente au détail et loisirs")
 ```
+
 En filtrant la série avec la moyenne mobile, on remarque pour la composante filtered expose la trajectoire de fond : une chute brutale et profonde qui forme un plateau bas à -80% lors du premier confinement, suivie d'une remontée progressive. La courbe marque ensuite une nouvelle flexion, moins prononcée à environ -40%, lors du second confinement, avant de repartir à la hausse.
 
 Avec les résidus on peut voir des pointes qui descendent très bas représentent des journées où la fréquentation a chuté ou augmenté de manière totalement isolée par rapport aux jours précédents (typiquement un jour férié ou une fermeture exceptionnelle). On remarque aussi que l'agitation de cette courbe est plus forte à la fin du graphique qu'au début, ce qui indique que la fréquentation est devenue beaucoup plus instable et irrégulière sur la dernière période.
@@ -414,7 +465,6 @@ spectrum(retail_resid, spans = c(3.5), main = "Spectre résidus - Fréquentation
 ```
 
 En s'intéressant au périodigramme lissé pour la distribution des résidus, on remarque un pic principal à 50 suivit par deux autres à 110 et 160. Cela indique qu'il existe un cycle régulier dans la série, qui se répète avec une fréquence de 50 à 55 ou le cycle est au-dessus des limites de confiance bleues.
-
 
 ```{r analyse filtered}
 retail_filt <- extract(retail_tsd, components = "filtered")
@@ -447,7 +497,6 @@ retailw_ts <- ts(feur_datew$retail, start = c(2021, 46), frequency = 365)
 
 ```
 
-
 ```{r analyse série avec uniquement les jours de la semaine}
 acf(retailw_ts2)
 spectrum(retailw_ts2, spans = c(3,5))
@@ -472,7 +521,7 @@ plot(retailw_tsd, col = 1:3, main = "Fréquentation des lieux de vente au détai
 
 En isolant les jours de la semaine du weekend, on observe que la fréquentation suit une trajectoire de reprise plus hachée que la tendance globale, marquée par une chute brutale à près de -80% lors du choc initial suivie de plusieurs rechutes significatives entre fin 2020 et début 2021. Cette approche permet de confirmer que l'activité "de routine" a fini par se stabiliser au-dessus de son niveau de référence à partir de la mi-2021, tout en révélant que les jours ouvrés restent sujets à des variations plus nettes que la tendance générale lissée.
 
-On y distingue clairement une phase de transition : après le choc initial, la fréquentation entame une progression constante qui franchit la ligne du zéro vers la fin  d'année 2022. La stabilisation finale en haut confirme que les comportements se sont fixés sur un nouveau palier de référence, supérieur à la période pré-pandémie, ce qui suggère un changement structurel et durable des habitudes de fréquentation des lieux de ventes au détails et des loisirs en semaine.
+On y distingue clairement une phase de transition : après le choc initial, la fréquentation entame une progression constante qui franchit la ligne du zéro vers la fin d'année 2022. La stabilisation finale en haut confirme que les comportements se sont fixés sur un nouveau palier de référence, supérieur à la période pré-pandémie, ce qui suggère un changement structurel et durable des habitudes de fréquentation des lieux de ventes au détails et des loisirs en semaine.
 
 En début de période, ces barres sont très allongées, reflétant l'amplitude extrême des perturbations liées au confinement qui provoque une rupture brutale visible dans les données. À l'inverse, en 2022, les résidus s'écrasent et se resserrent autour de l'axe central. Le passage de fortes oscillations à des variations très réduites indique que la série a regagné en régularité, les facteurs de perturbation externes ayant perdu de leur intensité. La population a repris ces habitudes après la sortie du confinement.
 
