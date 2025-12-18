@@ -312,7 +312,7 @@ grocery_tswk <- ts(feur_datewk$grocery, start = c(2020, 46), frequency = 365)
 plot(grocery_tswk)
 
 grocery_tswk2 <- aggregate(grocery_tswk, 52, FUN = collapse::fmean, ts.eps = 1/52)
-plot(grocery_tswk2,  main = "Série weekend - Fréquentation des lieux de vente au détail et loisirs")
+plot(grocery_tswk2,  main = "Série weekend - Fréquentation des épiceries et pharmacies")
 ```
 
 ```{r grocery weekends trendtest}
