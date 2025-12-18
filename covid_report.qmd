@@ -86,7 +86,7 @@ plot(retail_tsd, main = "Décomposition de la fréquentation des zones de vente 
 
 En décomposant la série par moyenne mobile on peut voir que le filtrage reprend la tendance générale de baisse de fréquentation et la reprise dû aux différentes décisions gouvernementale face à la situation sanitaire.
 
-En regardant les résidus, on peut voir de très nombreux pics, avec des valeurs extrêmes négatives qui peuvent s'expliquer par la fermeture les magasins de vente au détail et loisirs. Mais cela peut aussi s'expliquer par les fermetures à cause des jours fériés ou alors des dimanches.
+En regardant les résidus, on peut voir de très nombreux pics, avec des valeurs extrêmes négatives qui peuvent s'expliquer par la fermeture les magasins de vente au détail et loisirs mais pas uniquement à cause de la pandémie. Les résidus semblent en parti suivre le calendrier avec des baisses de fréquention possible le dimanche ou les jours fériés de par leur fermeture mais aussi l'évolution du pouvoir d'achat pour les zones de vente au détail.
 
 
 ## Discussion et Conclusion
